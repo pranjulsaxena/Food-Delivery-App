@@ -4,17 +4,26 @@ import { Loader2, LockKeyhole, Mail, PhoneIcon, User2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
+import type { SignupInputState } from "@/schema/userSchema";
+import { userSignupSchema } from "@/schema/userSchema";
+import { z } from "zod/v4"
 
 function Signup() {
-  interface InputTypes {
-    email: string;
-    password: string;
-    name:string;
-    phone:string;
-  }
+  // interface InputTypes {
+  //   email: string;
+  //   password: string;
+  //   name:string;
+  //   phone:string;
+  // }
 
   const [Loading, setLoading] = useState(false);
-  const [input, setinput] = useState<InputTypes>({ email: "", password: "",name:"",phone:"" });
+  const [input, setinput] = useState<SignupInputState>({
+    email: "",
+    password: "",
+    name: "",
+    phone: "",
+  });
+  const [errors, setErrors] = useState<Partial<SignupInputState>>({});
 
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,6 +32,13 @@ function Signup() {
   const formSubmit = (e: FormEvent) => {
     e.preventDefault();
     console.log(input);
+    // form validation
+    const result = userSignupSchema.safeParse(input);
+    if (!result.success) {
+      const flattened = result.error.flatten();
+      setErrors(flattened.fieldErrors as Partial<SignupInputState>);
+      return
+    }
   };
   return (
     <div className="min-h-screen flex  justify-center items-center">
@@ -43,6 +59,7 @@ function Signup() {
             onChange={changeEventHandler}
           ></Input>
           <User2Icon className="absolute bottom-1 left-2 text-gray-500"></User2Icon>
+          {errors && <span className="text-sm text-red-500">{errors.name}</span>}
         </div>
         <div className="relative mb-4">
           <Input
@@ -54,6 +71,7 @@ function Signup() {
             onChange={changeEventHandler}
           ></Input>
           <Mail className="absolute bottom-1 left-2 text-gray-500"></Mail>
+          {errors && <span className="text-sm text-red-500">{errors.email}</span>}
         </div>
         <div className="relative mb-4">
           <Input
@@ -65,6 +83,8 @@ function Signup() {
             onChange={changeEventHandler}
           ></Input>
           <PhoneIcon className="absolute bottom-1 left-2 text-gray-500"></PhoneIcon>
+          {errors && <span className="text-sm text-red-500">{errors.phone}</span>}
+
         </div>
         <div className="relative mb-4">
           <Input
@@ -76,6 +96,7 @@ function Signup() {
             className="pl-10 focus-visible:ring-1"
           ></Input>
           <LockKeyhole className="absolute bottom-1 left-2 text-gray-500"></LockKeyhole>
+          {errors && <span className="text-sm text-red-500">{errors.password}</span>}
         </div>
         <div className="mb-10">
           {Loading ? (
