@@ -87,6 +87,7 @@ function Login() {
               Login
             </Button>
           )}
+          <span><Link className="text-blue-500 underline hover:text-blue-700" to="/login/forgotpassword">Forgot Password</Link></span>
         </div>
         <Separator />
         <p className="mt-2">

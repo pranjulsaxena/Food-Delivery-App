@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import type { SignupInputState } from "@/schema/userSchema";
 import { userSignupSchema } from "@/schema/userSchema";
-import { z } from "zod/v4"
+import { z } from "zod/v4";
 
 function Signup() {
   // interface InputTypes {
@@ -37,7 +37,7 @@ function Signup() {
     if (!result.success) {
       const flattened = result.error.flatten();
       setErrors(flattened.fieldErrors as Partial<SignupInputState>);
-      return
+      return;
     }
   };
   return (
@@ -49,54 +49,69 @@ function Signup() {
         <div className="mb-4">
           <h1 className="font-bold text-2xl text-center">InstaFoood</h1>
         </div>
-        <div className="relative mb-4">
-          <Input
-            type="text"
-            placeholder="Name"
-            value={input.name}
-            className="pl-10 focus-visible:ring-1"
-            name="name"
-            onChange={changeEventHandler}
-          ></Input>
-          <User2Icon className="absolute bottom-1 left-2 text-gray-500"></User2Icon>
-          {errors && <span className="text-sm text-red-500">{errors.name}</span>}
+        <div className="mb-4">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Name"
+              value={input.name}
+              className="pl-10 focus-visible:ring-1"
+              name="name"
+              onChange={changeEventHandler}
+            ></Input>
+            <User2Icon className="absolute bottom-1 left-2 text-gray-500"></User2Icon>
+          </div>
+          {errors && (
+            <span className="text-sm text-red-500">{errors.name}</span>
+          )}
         </div>
-        <div className="relative mb-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={input.email}
-            className="pl-10 focus-visible:ring-1"
-            name="email"
-            onChange={changeEventHandler}
-          ></Input>
-          <Mail className="absolute bottom-1 left-2 text-gray-500"></Mail>
-          {errors && <span className="text-sm text-red-500">{errors.email}</span>}
+        <div className="mb-4">
+          <div className="relative ">
+            <Input
+              type="email"
+              placeholder="Email"
+              value={input.email}
+              className="pl-10 focus-visible:ring-1"
+              name="email"
+              onChange={changeEventHandler}
+            ></Input>
+            <Mail className="absolute bottom-1 left-2 text-gray-500"></Mail>
+          </div>
+          {errors && (
+            <span className="text-sm text-red-500">{errors.email}</span>
+          )}
         </div>
-        <div className="relative mb-4">
-          <Input
-            type=""
-            placeholder="Contact"
-            value={input.phone}
-            className="pl-10 focus-visible:ring-1"
-            name="phone"
-            onChange={changeEventHandler}
-          ></Input>
-          <PhoneIcon className="absolute bottom-1 left-2 text-gray-500"></PhoneIcon>
-          {errors && <span className="text-sm text-red-500">{errors.phone}</span>}
-
+        <div className="mb-4">
+          <div className="relative">
+            <Input
+              type=""
+              placeholder="Contact"
+              value={input.phone}
+              className="pl-10 focus-visible:ring-1"
+              name="phone"
+              onChange={changeEventHandler}
+            ></Input>
+            <PhoneIcon className="absolute bottom-1 left-2 text-gray-500"></PhoneIcon>
+          </div>
+          {errors && (
+            <span className="text-sm text-red-500">{errors.phone}</span>
+          )}
         </div>
-        <div className="relative mb-4">
-          <Input
-            onChange={changeEventHandler}
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={input.password}
-            className="pl-10 focus-visible:ring-1"
-          ></Input>
-          <LockKeyhole className="absolute bottom-1 left-2 text-gray-500"></LockKeyhole>
-          {errors && <span className="text-sm text-red-500">{errors.password}</span>}
+        <div className="mb-4">
+          <div className="relative">
+            <Input
+              onChange={changeEventHandler}
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={input.password}
+              className="pl-10 focus-visible:ring-1"
+            ></Input>
+            <LockKeyhole className="absolute bottom-1 left-2 text-gray-500"></LockKeyhole>
+          </div>
+          {errors && (
+            <span className="text-sm text-red-500">{errors.password}</span>
+          )}
         </div>
         <div className="mb-10">
           {Loading ? (
