@@ -15,21 +15,46 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Menu, Moon, Sun } from "lucide-react";
+
+import {
+  Menu,
+  Moon,
+  ShoppingCart,
+  Sun,
+  Loader2,
+} from "lucide-react";
+
 import { Button } from "./ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+import { Input } from "./ui/input";
+import { Label } from "@/components/ui/label";
+
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetDescription,
+} from "./ui/sheet";
 
 function Navbar() {
+  const Loading = false;
   const admin = true;
+
   return (
-    <div className="max-w-7xl  mx-auto">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center h-14">
         <Link to="/">
-          <h1 className=" font-bold text-xl md:font-extrabold md:text-2xl">
+          <h1 className="font-bold text-xl md:font-extrabold md:text-2xl">
             InstaFood
           </h1>
         </Link>
+
         <div className="md:flex justify-center items-center gap-5 hidden">
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <Link to="/home">Home</Link>
             <Link to="/Profile">Profile</Link>
             <Link to="/home">Order</Link>
@@ -53,8 +78,9 @@ function Navbar() {
             )}
           </div>
         </div>
+
         <div className="md:flex justify-center items-center gap-5 hidden">
-          <div className="flex justify-center items-center gap-2">
+          <div className="flex justify-center items-center gap-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="icon">
@@ -70,10 +96,91 @@ function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
+          <Link to="/cart" className="relative ">
+            <ShoppingCart />
+            <Button
+              size={"icon"}
+              className="w-3 h-3 rounded-full text-[10px] text-center bg-red-500 absolute -top-2 left-2 hover:bg-red-500"
+            >
+              13
+            </Button>
+          </Link>
+
+          <Avatar>
+            <AvatarImage />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+
+          <div>
+            {Loading ? (
+              <Button
+                disabled={true}
+                className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
+              >
+                <Loader2 className="animate-spin mr-2 w-4 h-4" />Loading...
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full bg-[#D19254] hover:bg-[#d18c47]"
+              >
+                Logout
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile menu inside the same flex container */}
+        <div className="md:hidden">
+          <MobileMenu />
         </div>
       </div>
     </div>
   );
 }
+
+const MobileMenu = () => {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon">
+          <Menu className="w-5 h-5" />
+        </Button>
+      </SheetTrigger>
+
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Edit profile</SheetTitle>
+          <SheetDescription>
+            Make changes to your profile here. Click save when you're done.
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-right">
+              Name
+            </Label>
+            <Input id="name" value="Pedro Duarte" className="col-span-3" />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="username" className="text-right">
+              Username
+            </Label>
+            <Input id="username" value="@peduarte" className="col-span-3" />
+          </div>
+        </div>
+
+        <SheetFooter>
+          <SheetClose asChild>
+            <Button type="submit">Save changes</Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+};
 
 export default Navbar;
