@@ -22,6 +22,11 @@ import {
   ShoppingCart,
   Sun,
   Loader2,
+  User,
+  HandPlatter,
+  SquareMenu,
+  UtensilsCrossed,
+  PackageCheck,
 } from "lucide-react";
 
 import { Button } from "./ui/button";
@@ -39,6 +44,7 @@ import {
   SheetTrigger,
   SheetDescription,
 } from "./ui/sheet";
+import { Separator } from "@radix-ui/react-separator";
 
 function Navbar() {
   const Loading = false;
@@ -103,7 +109,7 @@ function Navbar() {
               size={"icon"}
               className="w-3 h-3 rounded-full text-[10px] text-center bg-red-500 absolute -top-2 left-2 hover:bg-red-500"
             >
-              13
+              5
             </Button>
           </Link>
 
@@ -118,7 +124,8 @@ function Navbar() {
                 disabled={true}
                 className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
               >
-                <Loader2 className="animate-spin mr-2 w-4 h-4" />Loading...
+                <Loader2 className="animate-spin mr-2 w-4 h-4" />
+                Loading...
               </Button>
             ) : (
               <Button
@@ -141,6 +148,7 @@ function Navbar() {
 }
 
 const MobileMenu = () => {
+  const user = true;
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -149,33 +157,79 @@ const MobileMenu = () => {
         </Button>
       </SheetTrigger>
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
+      <SheetContent className="flex flex-col">
+        <SheetHeader className="flex flex-row justify-between items-center mt-6">
+          <SheetTitle className="text-xl font-bold">InstaFood</SheetTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Light</DropdownMenuItem>
+              <DropdownMenuItem>Dark</DropdownMenuItem>
+              <DropdownMenuItem>System</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </SheetHeader>
-
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input id="username" value="@peduarte" className="col-span-3" />
-          </div>
-        </div>
-
-        <SheetFooter>
+        <Separator className="my-4" />
+        <SheetDescription className="flex flex-col">
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-1  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <User />
+            <span>Profile</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <HandPlatter />
+            <span>Orders</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <ShoppingCart />
+            <span>Cart</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <SquareMenu />
+            <span>Menu</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <UtensilsCrossed />
+            <span>Restaurant</span>
+          </Link>
+          <Link
+            to="/profile"
+            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+          >
+            <PackageCheck />
+            <span>Restaurant Orders</span>
+          </Link>
+        </SheetDescription>
+        <SheetFooter className="flex flex-col">
+          <Avatar>
+            <AvatarImage src="" alt="@shadcn" />
+            <div className="flex flex-row gap-4 items-center">
+              <AvatarFallback className="bg-gray-200 rounded-full p-1">PS</AvatarFallback>
+              <h1 className="text-xl font-bold">Pranjul Saxena</h1>
+            </div>
+          </Avatar>
           <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
+            <Button className="bg-[#D19254] hover:bg-[#d18c47]">Logout</Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
