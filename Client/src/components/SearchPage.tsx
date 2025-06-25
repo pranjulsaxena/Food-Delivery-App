@@ -1,5 +1,5 @@
 import React, { useState, type ChangeEvent } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, Links, useParams, useSearchParams } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Filter from "./Filter";
@@ -10,13 +10,12 @@ import pizzaImage from "@/assets/pizza.png";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import SearchPageSkeleton from "./SearchPageSkeleton";
 
-
 function SearchPage() {
   const Params = useParams();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-2 my-10">
+    <div className="max-w-10xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-5 my-10">
       <Filter />
       <div className="flex-1 flex flex-col">
         <div className="w-full flex gap-2 px-1">
@@ -57,7 +56,7 @@ function SearchPage() {
 
         {/* Searched items displayed here  */}
         <div className="grid md:grid-cols-3 gap-4 mx-auto md:w-full">
-          {[1, 2, 3, 4,5].map((_, index) => (
+          {[1, 2, 3, 4, 5].map((_, index) => (
             <Card
               key={index}
               className="w-[300px] overflow-hidden rounded-md shadow-2xl pt-6 pb-0"
@@ -102,9 +101,11 @@ function SearchPage() {
                 </div>
               </CardContent>
               <CardFooter className="p-4 border-t dark:border-t-gray-700 border-t-gray-100 text-white flex justify-end">
-                <Button className="rounded-full bg-[#D19254] hover:bg-[#d18c47] transition-colors duration-300 font-semibold shadow-md px-4 pt-2">
-                  View More
-                </Button>
+                <Link to={`/restaurant/${123}`}>
+                  <Button className="rounded-full bg-[#D19254] hover:bg-[#d18c47] transition-colors duration-300 font-semibold shadow-md px-4 pt-2">
+                    View More
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}

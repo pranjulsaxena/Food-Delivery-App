@@ -63,7 +63,7 @@ function Navbar() {
           <div className="flex gap-3">
             <Link to="/home">Home</Link>
             <Link to="/Profile">Profile</Link>
-            <Link to="/home">Order</Link>
+            <Link to="/orders/status">Order</Link>
             {admin && (
               <Menubar>
                 <MenubarMenu>
@@ -72,7 +72,7 @@ function Navbar() {
                     <Link to="/admin/restaurants">
                       <MenubarItem>Restaurants</MenubarItem>
                     </Link>
-                    <Link to="/admin/menu">
+                    <Link to="/admin/menus">
                       <MenubarItem>Menu</MenubarItem>
                     </Link>
                     <Link to="/admin/orders">
@@ -175,7 +175,7 @@ const MobileMenu = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         </SheetHeader>
-        <Separator className="my-4" />
+        <Separator className="my-4 h-px bg-gray-300 w-full" />
         <SheetDescription className="flex flex-col">
           <Link
             to="/profile"
@@ -185,35 +185,35 @@ const MobileMenu = () => {
             <span>Profile</span>
           </Link>
           <Link
-            to="/profile"
+            to="/orders/status"
             className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
           >
             <HandPlatter />
             <span>Orders</span>
           </Link>
           <Link
-            to="/profile"
+            to="/Cart"
             className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
           >
             <ShoppingCart />
             <span>Cart</span>
           </Link>
           <Link
-            to="/profile"
+            to="/admin/menus"
             className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
           >
             <SquareMenu />
             <span>Menu</span>
           </Link>
           <Link
-            to="/profile"
+            to="/admin/restaurants"
             className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
           >
             <UtensilsCrossed />
             <span>Restaurant</span>
           </Link>
           <Link
-            to="/profile"
+            to="/admin/orders"
             className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
           >
             <PackageCheck />
