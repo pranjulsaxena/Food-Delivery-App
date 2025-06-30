@@ -21,14 +21,15 @@ export const signup = async (req: Request, res: Response) => {
     const { fullName, email, contact, password } = req.body;
 
     let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({
+    if (!user) {
+      res.status(400).json({
         success: false,
         message: "User already exist with this email",
       });
+      return;
     }
     const hashedPassword = bcrypt.hash(password, 10);
-    const verificationToken = generateVerificationToken();
+    const verificationToken = generateVerificationToken(); // 6 digit code
 
     user = await User.create({
       fullName,
@@ -44,14 +45,14 @@ export const signup = async (req: Request, res: Response) => {
     const userWithoutPassword = await User.findOne({ email }).select(
       "-password"
     );
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
       message: "Account created successfully",
       user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: "Internal Sever Error" });
+    res.status(400).json({ message: "Internal Sever Error" });
   }
 };
 
@@ -60,16 +61,18 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Account doesn't exist. Kindly signup",
       });
+      return;
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return res
+      res
         .status(400)
         .json({ success: false, message: "Invalid Credentials!!" });
+      return;
     }
     generateToken(res, user);
     user.lastlogin = new Date();
@@ -77,14 +80,14 @@ export const login = async (req: Request, res: Response) => {
 
     // send user without password
     const userWithoutPassword = await User.findOne({ email });
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: `Welcome back ${user.fullName}`,
       user: userWithoutPassword,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -97,10 +100,11 @@ export const verifyEmail = async (req: Request, res: Response) => {
     }).select("-password");
 
     if (!user) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         message: "Invalid or expired verification token",
       });
+      return;
     }
     user.isVerified = true;
     user.verificationToken = undefined;
@@ -110,24 +114,24 @@ export const verifyEmail = async (req: Request, res: Response) => {
     // send welcome email
     await sendWelcomeEmail(user.email, user.fullName);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Email verified successfully",
       user,
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).send("Internal Server Error");
+    res.status(500).send("Internal Server Error");
   }
 };
 
 export const logout = async (req: Request, res: Response) => {
   try {
     res.clearCookie("token");
-    return res.status(200).json({ success: true, message: "" });
+    res.status(200).json({ success: true, message: "" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -136,9 +140,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res
+      res
         .status(400)
         .json({ message: "Account doesn't exist", success: false });
+      return;
     }
     const resetToken = crypto.randomBytes(40).toString("hex");
     const resetTokenExpiresAt = new Date(Date.now() + 60 * 60 * 1000);
@@ -152,29 +157,30 @@ export const forgotPassword = async (req: Request, res: Response) => {
       `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`
     );
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Password reset link sent to your email",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
-    const { nePassword: newPassword } = req.body;
+    const { newPassword: newPassword } = req.body;
 
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordTokenExpiredAt: { $gt: Date.now() },
     });
     if (!user) {
-      return res
+      res
         .status(400)
         .json({ success: false, message: "Invalid or expired reset token" });
+      return;
     }
     // update Password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -186,13 +192,13 @@ export const resetPassword = async (req: Request, res: Response) => {
     // send success reset email
     await sendResetSuccessEmail(user.email);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Password reset successfully",
     });
   } catch (error) {
     console.log(error);
-    return res.json(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -201,14 +207,13 @@ export const checkAuth = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(userId).select("-password");
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
     }
-    return res.status(200).json({ success: true, user });
+    res.status(200).json({ success: true, user });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -226,13 +231,13 @@ export const updateProfile = async (req: Request, res: Response) => {
       new: true,
     }).select("-password");
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       user,
       message: "Profile Updated successfully!",
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
