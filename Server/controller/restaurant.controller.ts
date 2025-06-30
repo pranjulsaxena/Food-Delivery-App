@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { restaurant } from "../models/restaurant.model";
 import uploadImageCloudinary from "../utils/imageUpload";
+import { Order } from "../models/order.model";
 
 export const createRestaurant = async (req: Request, res: Response) => {
   try {
@@ -40,7 +41,26 @@ export const createRestaurant = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
+export const getRestaurant = async (req: Request, res: Response) => {
+  try {
+    const Restaurant = await restaurant
+      .findOne({ user: req.userId })
+      .populate("menus");
+    if (!Restaurant) {
+      res.status(404).json({
+        success: false,
+        restaurant: [],
+        message: "Restaurant not found",
+      });
+      return;
+    }
+    res.status(200).json({ success: true, Restaurant });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+    return;
+  }
+};
 export const updateRestaurant = async (req: Request, res: Response) => {
   const file = req.file;
   const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
@@ -65,11 +85,110 @@ export const updateRestaurant = async (req: Request, res: Response) => {
         cuisines: JSON.parse(cuisines),
       }
     );
-    res
-      .status(200)
-      .json({ success: true, message: "Restaurant updated successfully",restaurant });
+    res.status(200).json({
+      success: true,
+      message: "Restaurant updated successfully",
+      restaurant,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getRestaurantOrders = async (req: Request, res: Response) => {
+  try {
+    const Restaurant = await restaurant.findOne({ user: req.userId });
+    if (!Restaurant) {
+      res.status(401).json({ success: false, message: "Restaurant not found" });
+      return;
+    }
+    // will received all the orders by customers for this restaurant along with complete information of customers,restaurant using populate.
+
+    const orders = await Order.find({ restaurant: Restaurant._id })
+      .populate("restaurant")
+      .populate("user");
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const updateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const { ordreId } = req.params;
+    const { status } = req.body;
+
+    const order = await Order.findById({ _id: ordreId });
+    if (!order) {
+      res.status(404).json({ success: false, message: "Order not found" });
+      return;
+    }
+    order.status = status;
+    await order.save();
+
+    res.status(200).json({ success: true, message: "Status updated" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const searchRestaurant = async (req: Request, res: Response) => {
+  try {
+    const searchText = req.params.searchText || "";
+    const searchQuery = (req.query.searchQuery as string) || "";
+    const selectedCuisines = ((req.query.selectedCuisines as string) || "")
+      .split(",")
+      .filter((cuisines) => cuisines);
+    const query: any = {};
+
+    // basic search based on searchText (name,city,country)
+    if (searchText) {
+      query.$or = [
+        { restaurantName: { $regex: searchText, $options: "i" } },
+        { city: { $regex: searchText, $options: "i" } },
+        { country: { $regex: searchText, $options: "i" } },
+      ];
+    }
+    // filter on the basis of searchQuery
+    if (searchQuery) {
+      query.$or = [
+        { restaurantName: { $regex: searchText, $options: "i" } },
+        { cuisines: { $regex: searchQuery, $options: "i" } },
+      ];
+    }
+    if (selectedCuisines.length > 0) {
+      query.cuisines = { $in: selectedCuisines };
+    }
+    console.log(query);
+    const Restaurants = await restaurant.find(query);
+    res.status(200).json({ success: true, data: Restaurants });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getSingleRestaurant = async (req: Request, res: Response) => {
+  const restaurantId = req.params.id;
+  try {
+    const Restaurant = await restaurant
+      .findById(restaurantId)
+      .populate({ path: "menus", options: { createdAt: -1 } });
+
+    if (!Restaurant) {
+      res.status(401).json({ success: false, message: "Not restaurant found" });
+      return;
+    }
+    res.status(200).json({ Restaurant });
+    return;
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Sever Error" });
   }
 };
