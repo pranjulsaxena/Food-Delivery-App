@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
 import { userLoginSchema, type LoginInputState } from "@/schema/userSchema";
+import { useUserStore } from "../../store/useUserStore";
 
 function Login() {
   // interface LoginInputState {
@@ -12,7 +13,8 @@ function Login() {
   //     password: string;
   // }
 
-  const [Loading, setLoading] = useState(false);
+  
+  const {login,loading}:any = useUserStore();
   const [input, setinput] = useState<LoginInputState>({
     email: "",
     password: "",
@@ -23,7 +25,7 @@ function Login() {
     const { name, value } = e.target;
     setinput({ ...input, [name]: value });
   };
-  const formSubmit = (e: FormEvent) => {
+  const formSubmit = async(e: FormEvent) => {
     e.preventDefault();
     console.log(input);
     const result = userLoginSchema.safeParse(input);
@@ -32,6 +34,9 @@ function Login() {
       setErrors(flattened.fieldErrors as Partial<LoginInputState>);
       return;
     }
+    console.log("implementing login");
+    // api implementation
+    await login(input);
   };
   return (
     <div className="min-h-screen flex  justify-center items-center">
@@ -71,7 +76,7 @@ function Login() {
           {errors && <span className="text-sm text-red-500">{errors.password}</span>}
         </div>
         <div className="mb-10">
-          {Loading ? (
+          {loading ? (
             <Button
               disabled={true}
               className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
@@ -87,7 +92,7 @@ function Login() {
               Login
             </Button>
           )}
-          <span><Link className="text-blue-500 underline hover:text-blue-700" to="/login/forgotpassword">Forgot Password</Link></span>
+          <span><Link className="text-blue-500 underline hover:text-blue-700" to="/forgotpassword">Forgot Password</Link></span>
         </div>
         <Separator />
         <p className="mt-2">

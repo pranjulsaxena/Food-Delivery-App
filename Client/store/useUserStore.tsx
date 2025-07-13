@@ -49,6 +49,32 @@ export const useUserStore = create(
           toast.error(error.response.data.message);
         }
       },
+      login: async (input: LoginInputState) => {
+        console.log("inside login");
+        try {
+          set({ loading: true });
+          const response = await axios.post(`${API_ENDPOINT}/login`, input, {
+            headers: { "Content-Type": "application/json" },
+          });
+          if (response.data.success) {
+            console.log(response.data.user);
+            toast.success(response.data.message);
+            set({
+              loading: false,
+              user: response.data.user,
+              isAuthenticated: true,
+            });
+          }
+          let navigate = useNavigate();
+          () => {
+            let navigate = useNavigate();
+            navigate("http://localhost:5173/verifypassword");
+          };
+        } catch (error: any) {
+          set({ loading: false });
+          toast.error(error.response.data.message);
+        }
+      },
     }),
     {
       name: "UserDetails",
