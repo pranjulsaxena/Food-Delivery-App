@@ -21,14 +21,14 @@ export const signup = async (req: Request, res: Response) => {
     const { fullName, email, contact, password } = req.body;
 
     let user = await User.findOne({ email });
-    if (!user) {
+    if (user) {
       res.status(400).json({
         success: false,
         message: "User already exist with this email",
       });
       return;
     }
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const verificationToken = generateVerificationToken(); // 6 digit code
 
     user = await User.create({
