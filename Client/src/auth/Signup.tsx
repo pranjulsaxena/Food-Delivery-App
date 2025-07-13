@@ -7,16 +7,9 @@ import { Link } from "react-router-dom";
 import type { SignupInputState } from "@/schema/userSchema";
 import { userSignupSchema } from "@/schema/userSchema";
 import { z } from "zod/v4";
+import {useUserStore} from "../../store/useUserStore"
 
 function Signup() {
-  // interface InputTypes {
-  //   email: string;
-  //   password: string;
-  //   name:string;
-  //   phone:string;
-  // }
-
-  const [Loading, setLoading] = useState(false);
   const [input, setinput] = useState<SignupInputState>({
     email: "",
     password: "",
@@ -24,12 +17,13 @@ function Signup() {
     phone: "",
   });
   const [errors, setErrors] = useState<Partial<SignupInputState>>({});
+  const {signup,loading}:any = useUserStore();
 
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setinput({ ...input, [name]: value });
   };
-  const formSubmit = (e: FormEvent) => {
+  const formSubmit = async(e: FormEvent) => {
     e.preventDefault();
     console.log(input);
     // form validation
@@ -39,6 +33,10 @@ function Signup() {
       setErrors(flattened.fieldErrors as Partial<SignupInputState>);
       return;
     }
+
+    // api implementation
+    await signup(input);
+
   };
   return (
     <div className="min-h-screen flex  justify-center items-center">
@@ -114,7 +112,7 @@ function Signup() {
           )}
         </div>
         <div className="mb-10">
-          {Loading ? (
+          {loading ? (
             <Button
               disabled={true}
               className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
