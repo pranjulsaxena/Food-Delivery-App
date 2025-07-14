@@ -1,17 +1,79 @@
 import Login from './auth/login'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import MainLayout from './MainLayout'
-import Signup
- from './auth/Signup'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
+import Signup from './auth/Signup'
+import ForgotPassword from './auth/forgotPassword'
+import ResetPassword from './auth/resetPassword'
+import VerifyEmail from './auth/verifyEmail'
+import Layout from './Layout'
+import HeroSection from './components/HeroSection'
+import Profile from './components/profile'
+import SearchPage from './components/SearchPage'
+import RestaurantDetails from './components/RestaurantDetails'
+import Cart from './components/Cart'
+import Restaurant from './admin/Restaurant'
+import AddMenu from './admin/AddMenu'
+import Orders from './admin/orders'
+import Success from './components/Success'
+import { useUserStore } from '../store/useUserStore'
+
+
+const IsAuthenticatedUser = ({children}:{children:React.ReactNode})=>{
+  const {isAuthenticated,user} = useUserStore();
+  if(isAuthenticated && user?.isVerified){
+    return <Navigate to="/" replace/>
+  }
+  return children
+
+}
+
 const approuter = createBrowserRouter([
   {path:"/",
-    element:<MainLayout/>
+    element:<Layout/>,
+    children:[{
+      path:"/",
+      element:<HeroSection/>
+    },
+    {path:"/profile",
+      element:<Profile/>
+    },{
+      path:"/search/:text",
+      element:<SearchPage/>
+    },
+    {path:"/restaurant/:id",
+      element:<RestaurantDetails/>
+    },
+    {path:"/cart",
+      element:<Cart/>
+    },
+    {path:"admin/restaurants",
+      element:<Restaurant/>
+    },
+    {path:"admin/Menus",
+      element:<AddMenu/>
+    },{
+      path:"admin/orders",
+      element:<Orders/>
+    },{
+      path:"/orders/status",
+      element:<Success/>
+    }
+  ]
   },
   {path:"/login",
-    element:<Login/>
+    element:<IsAuthenticatedUser><Login/></IsAuthenticatedUser>
   },
   {path:"/signup",
-    element:<Signup/>
+    element:<IsAuthenticatedUser><Signup/></IsAuthenticatedUser>
+  },
+  {path:'/forgotpassword',
+    element:<ForgotPassword/>
+  },
+  {
+    path:'/resetpassword/:resettoken',
+    element:<ResetPassword/>
+  },
+  {path:'/verifyemail',
+    element:<VerifyEmail/>
   }
 ])
 
@@ -19,7 +81,6 @@ function App() {
   return (
   <main>
     <RouterProvider router={approuter}/>
-    
   </main>
   )
 }
