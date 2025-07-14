@@ -72,7 +72,7 @@ function Profile() {
       </div>
       <div className="grid md:grid-cols-4 my-10 gap-3 px-2 ">
         {[{
-          label: 'Email', name: 'email', icon: <Mail />, type: 'email'
+          label: 'Email', name: 'email', icon: <Mail />, type: 'email', disabled: true
         }, {
           label: 'Address', name: 'address', icon: <MapPin />, type: 'text'
         }, {
