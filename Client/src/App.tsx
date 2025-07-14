@@ -1,4 +1,3 @@
-import React from 'react'
 import Login from './auth/login'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MainLayout from './MainLayout'
