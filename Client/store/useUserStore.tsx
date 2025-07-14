@@ -9,7 +9,8 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 export const API_ENDPOINT = `http://localhost:5000/api/v1/user`;
-export const useUserStore = create(
+
+export const useUserStore = create()(
   persist(
     (set) => ({
       user: null,
@@ -75,6 +76,49 @@ export const useUserStore = create(
           toast.error(error.response.data.message);
         }
       },
+      verifyEmail: async (input: string) => {
+        try {
+          set({ loading: true });
+          const response = await axios.post(
+            `${API_ENDPOINT}/verify-email`,
+            { verificationToken: input },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (response.data.success) {
+            console.log(response.data.user);
+            toast.success(response.data.message);
+            set({ loading: false, user: response.data.user });
+          }
+        } catch (error: any) {
+          set({ loading: false });
+          toast.error(error.response.data.message);
+        }
+      },
+      checkAuthentication: async () => {
+        try {
+            set({ isCheckingAuth: true });
+            const response = await axios.get(`${API_ENDPOINT}/check-auth`);
+            if (response.data.success) {
+                set({user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
+            }
+        } catch (error) {
+            set({isAuthenticated: false, isCheckingAuth: false });
+        }
+    },
+      logOut: async () => {
+        try {
+          set({ loading: true });
+          const response = await axios.post(`${API_ENDPOINT}/logout`);
+          if (response.data.success) {
+            toast.success(response.data.message);
+            set({ loading: false, user: null, isAuthenticated: false });
+          }
+        } catch (error: any) {
+          set({ loading: false });
+          toast.error(error.response.data.message);
+        }
+      },
+      
     }),
     {
       name: "UserDetails",
