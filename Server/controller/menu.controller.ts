@@ -47,7 +47,8 @@ export const editMenu = async (req: Request, res: Response) => {
 
     let menu = await Menu.findById(id);
     if (!menu) {
-      return res.status(404).json({ success: false, message: "No menu found" });
+       res.status(404).json({ success: false, message: "No menu found" });
+       return;
     }
 
     const imageUrl = file ? await uploadImageCloudinary(file) : "";

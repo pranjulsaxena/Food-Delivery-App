@@ -171,7 +171,7 @@ export const generatePasswordResetEmailHtml = (resetURL: string) => {
               margin: 20px 0;
               font-size: 16px;
               color: white;
-              background-color: #ffffff;
+              background-color: black;
               text-decoration: none;
               border-radius: 5px;
             }
@@ -185,7 +185,7 @@ export const generatePasswordResetEmailHtml = (resetURL: string) => {
             <div class="email-body">
               <p>Hi,</p>
               <p>We received a request to reset your password. Click the button below to reset it.</p>
-              <a href="${resetURL}" class="button">Reset Password</a>
+              <a href=${resetURL} class="button">Reset Password</a>
               <p>If you didn't request a password reset, please ignore this email.</p>
               <p>Thank you,<br/>The Patel Food Team</p>
             </div>

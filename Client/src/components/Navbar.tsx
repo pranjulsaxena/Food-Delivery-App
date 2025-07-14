@@ -51,7 +51,7 @@ function Navbar() {
   const admin = true;
 
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="max-w-screen mx-auto shadow-xl bg-white  px-2">
       <div className="flex justify-between items-center h-14">
         <Link to="/">
           <h1 className="font-bold text-xl md:font-extrabold md:text-2xl">

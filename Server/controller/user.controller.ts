@@ -174,7 +174,7 @@ export const resetPassword = async (req: Request, res: Response) => {
 
     const user = await User.findOne({
       resetPasswordToken: token,
-      resetPasswordTokenExpiredAt: { $gt: Date.now() },
+      resetPasswordTokenExpiredAt: { $gt: new Date() },
     });
     if (!user) {
       res
@@ -220,12 +220,12 @@ export const checkAuth = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
-    const { fullName, email, address, city, country, profilePicture } =
+    const { fullName, address, city, country, profilePicture } =
       req.body;
     // upload image on cloudinary
     let cloudResponse: any;
     cloudResponse = await cloudinary.uploader.upload(profilePicture);
-    const updatedData = { fullName, email, address, city, country };
+    const updatedData = { fullName, address, city, country };
 
     const user = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,

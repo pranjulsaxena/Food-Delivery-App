@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.route("/").get(isAuthenticated,getOrders);
 router.route("/checkout/create-checkout-session").post(isAuthenticated,createCheckOutSession);
-router.route("/webhook").post();
+// router.route("/webhook").post();
 
 export default router;
