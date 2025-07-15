@@ -34,7 +34,13 @@ const ProtectedRoutes = ({ children }: { children: React.ReactNode }) => {
   return children;
 };
 
-
+const IsAdmin = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useUserStore();
+  if (!user?.admin) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
 const IsAuthenticatedUser = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, user } = useUserStore();
