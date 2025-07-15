@@ -124,14 +124,13 @@ const approuter = createBrowserRouter([
   { path: "/verifyemail", element: <VerifyEmail /> },
 ]);
 
-
 function App() {
-  const { isCheckingAuth, checkAuth } = useUserStore();
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    const { isCheckingAuth, checkAuth } = useUserStore();
+    useEffect(() => {
+      checkAuth();
+    }, [checkAuth]);
 
-  if (isCheckingAuth) return <Loading />;
+    if (isCheckingAuth) return <Loading />;
   return (
     <main>
       <RouterProvider router={approuter} />

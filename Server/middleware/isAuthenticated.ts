@@ -10,19 +10,28 @@ declare global{
 }
 
 export const isAuthenticated=(req:Request,res:Response,next:NextFunction)=>{
+    
     try{
         const token = req.cookies.token;
+        console.log(req.cookies);
+        if (!token) {
+       res.status(401).json({ message: "No token", success: false });
+       return;
+    }
+
         
-        const decoded_info = jwt.verify(token,process.env.secrety_key!);
-        if(!decoded_info){
-             res.json(401).json({message:"Authentication failed", success:false}) as jwt.JwtPayload
+        const decoded_info = jwt.verify(token,process.env.SECRET_KEY!) as jwt.JwtPayload;
+        if(!decoded_info?.userId){
+             res.status(401).json({ message: "Invalid token", success: false })
              return
         }
+        console.log(decoded_info.userId);
         req.userId = decoded_info.userId;
 
         next();
 
     }catch(error){
-        console.log(error)
+         res.status(401).json({ message: "Unauthorized", success: false });
+         return;
     }
 }
