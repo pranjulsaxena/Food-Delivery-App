@@ -10,29 +10,29 @@ import { useNavigate } from "react-router-dom";
 
 export const API_ENDPOINT = `http://localhost:5000/api/v1/user`;
 type User = {
-  fullName:string;
-  email:string;
-  contact:number;
-  address:string;
-  country:string;
-  city:string;
-  profilePicture:string;
-  admin:boolean;
+  fullName: string;
+  email: string;
+  contact: number;
+  address: string;
+  country: string;
+  city: string;
+  profilePicture: string;
+  admin: boolean;
   isVerified: boolean;
-}
-type userState= {
-  user:null |User;
-  isAuthenticated:boolean;
-  isCheckingAuth:boolean;
-  loading:boolean;
-  login:(input:LoginInputState)=>Promise<void>;
-  signup:(input:SignupInputState)=>Promise<void>;
-  checkAuth:()=>Promise<void>;
-  logOut:()=>Promise<void>;
-  forgotPasswordapi:(email:string)=>Promise<void>;
-  resetpassword:(newPassword:string,token:string)=>Promise<void>;
-  updatedetails:(input:any)=>Promise<void>;
-}
+};
+type userState = {
+  user: null | User;
+  isAuthenticated: boolean;
+  isCheckingAuth: boolean;
+  loading: boolean;
+  login: (input: LoginInputState) => Promise<void>;
+  signup: (input: SignupInputState) => Promise<void>;
+  checkAuth: () => Promise<void>;
+  logOut: () => Promise<void>;
+  forgotPasswordapi: (email: string) => Promise<void>;
+  resetpassword: (newPassword: string, token: string) => Promise<void>;
+  updatedetails: (input: any) => Promise<void>;
+};
 
 export const useUserStore = create<userState>()(
   persist(
@@ -75,11 +75,12 @@ export const useUserStore = create<userState>()(
         }
       },
       login: async (input: LoginInputState) => {
-        console.log("inside login");
+
         try {
           set({ loading: true });
           const response = await axios.post(`${API_ENDPOINT}/login`, input, {
             headers: { "Content-Type": "application/json" },
+            withCredentials: true, 
           });
           if (response.data.success) {
             console.log(response.data.user);
@@ -90,11 +91,6 @@ export const useUserStore = create<userState>()(
               isAuthenticated: true,
             });
           }
-          let navigate = useNavigate();
-          () => {
-            let navigate = useNavigate();
-            navigate("http://localhost:5173/verifypassword");
-          };
         } catch (error: any) {
           set({ loading: false });
           toast.error(error.response.data.message);
@@ -118,11 +114,30 @@ export const useUserStore = create<userState>()(
           toast.error(error.response.data.message);
         }
       },
-      checkAuth: async () => {},
+      checkAuth: async () => {
+        try {
+          console.log("Inside checkAuth of zustand store.")
+          const response = await axios.get(`${API_ENDPOINT}/check-auth`, {
+            withCredentials: true,
+          });
+          
+          if (response.data.success) {
+            console.log("all is well");
+            set({
+              isCheckingAuth: false,
+              isAuthenticated: true,
+              user: response.data.user,
+            });
+          }
+        } catch (error: any) {
+          console.log(error.message);
+          set({ isAuthenticated: false, isCheckingAuth: false });
+        }
+      },
       logOut: async () => {
         try {
           set({ loading: true });
-          const response = await axios.post(`${API_ENDPOINT}/logout`);
+          const response = await axios.post(`${API_ENDPOINT}/logout`,null,{withCredentials: true});
           if (response.data.success) {
             toast.success(response.data.message);
             set({ loading: false, user: null, isAuthenticated: false });
@@ -153,7 +168,6 @@ export const useUserStore = create<userState>()(
           const response = await axios.post(
             `${API_ENDPOINT}/reset-password/${token}`,
             { newPassword }
-
           );
           if (response.data.success) {
             toast.success(response.data.message);

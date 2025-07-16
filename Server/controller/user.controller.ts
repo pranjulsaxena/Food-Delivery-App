@@ -127,8 +127,10 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token");
-    res.status(200).json({ success: true, message: "" });
+    res.clearCookie("token",).status(200).json({
+            success: true,
+            message: "Logged out successfully."
+        });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });

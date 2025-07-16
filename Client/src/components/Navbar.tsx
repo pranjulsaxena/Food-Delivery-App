@@ -45,10 +45,11 @@ import {
   SheetDescription,
 } from "./ui/sheet";
 import { Separator } from "@radix-ui/react-separator";
+import { useUserStore } from "../../store/useUserStore";
 
 function Navbar() {
-  const Loading = false;
-  const admin = true;
+  const { loading, user, logOut } = useUserStore();
+  const admin = user?.admin;
 
   return (
     <div className="max-w-screen mx-auto shadow-xl bg-white  px-2">
@@ -65,7 +66,7 @@ function Navbar() {
             <Link to="/Profile">Profile</Link>
             <Link to="/orders/status">Order</Link>
             {admin && (
-              <Menubar>
+              <Menubar className="">
                 <MenubarMenu>
                   <MenubarTrigger>Dashboard</MenubarTrigger>
                   <MenubarContent className="bg-slate-100 px-2 py-2">
@@ -119,7 +120,7 @@ function Navbar() {
           </Avatar>
 
           <div>
-            {Loading ? (
+            {loading ? (
               <Button
                 disabled={true}
                 className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
@@ -131,6 +132,13 @@ function Navbar() {
               <Button
                 type="submit"
                 className="w-full bg-[#D19254] hover:bg-[#d18c47]"
+                onClick={() => {
+                  try {
+                    logOut();
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }}
               >
                 Logout
               </Button>
@@ -148,7 +156,7 @@ function Navbar() {
 }
 
 const MobileMenu = () => {
-  const user = true;
+  const { user, logOut } = useUserStore();
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -198,38 +206,57 @@ const MobileMenu = () => {
             <ShoppingCart />
             <span>Cart</span>
           </Link>
-          <Link
-            to="/admin/menus"
-            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
-          >
-            <SquareMenu />
-            <span>Menu</span>
-          </Link>
-          <Link
-            to="/admin/restaurants"
-            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
-          >
-            <UtensilsCrossed />
-            <span>Restaurant</span>
-          </Link>
-          <Link
-            to="/admin/orders"
-            className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
-          >
-            <PackageCheck />
-            <span>Restaurant Orders</span>
-          </Link>
+          {user!.admin && (
+            <>
+              (
+              <Link
+                to="/admin/menus"
+                className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+              >
+                <SquareMenu />
+                <span>Menu</span>
+              </Link>
+              <Link
+                to="/admin/restaurants"
+                className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+              >
+                <UtensilsCrossed />
+                <span>Restaurant</span>
+              </Link>
+              <Link
+                to="/admin/orders"
+                className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
+              >
+                <PackageCheck />
+                <span>Restaurant Orders</span>
+              </Link>
+              )
+            </>
+          )}
         </SheetDescription>
         <SheetFooter className="flex flex-col">
           <Avatar>
             <AvatarImage src="" alt="@shadcn" />
             <div className="flex flex-row gap-4 items-center">
-              <AvatarFallback className="bg-gray-200 rounded-full p-1">PS</AvatarFallback>
+              <AvatarFallback className="bg-gray-200 rounded-full p-1">
+                PS
+              </AvatarFallback>
               <h1 className="text-xl font-bold">Pranjul Saxena</h1>
             </div>
           </Avatar>
           <SheetClose asChild>
-            <Button className="bg-[#D19254] hover:bg-[#d18c47]">Logout</Button>
+            <Button
+              className="bg-[#D19254] hover:bg-[#d18c47]"
+              onClick={() => {
+                try {
+                  logOut();
+                } catch (error) {
+                  console.log(error);
+                }
+              }}
+            >
+              Logout
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>
