@@ -1,4 +1,5 @@
 import React, {
+  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -6,6 +7,7 @@ import React, {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {useRestaurantOrder} from "../../store/useRestaurantStore";
 import {
   restaurantSchema,
   type restaurantType,
@@ -13,7 +15,7 @@ import {
 import { Loader2 } from "lucide-react";
 
 const Restaurant = () => {
-  const [loading, setLoading] = useState(false);
+  const {loading,createRestaurant,restaurant,updateRestaurant}:any = useRestaurantOrder();
   const [restaurantData, setRestaurantData] = useState<restaurantType>({
     restaurantName: "",
     city: "",
@@ -37,9 +39,9 @@ const Restaurant = () => {
     }
   };
 
-  const formHandler = (e: FormEvent<HTMLFormElement>) => {
+  const formHandler = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(restaurantData);
+
 
     const result = restaurantSchema.safeParse(restaurantData);
     if (!result.success) {
@@ -48,15 +50,33 @@ const Restaurant = () => {
       return;
     }
     // api implementation starts here
+    const formData = new FormData();
+    formData.append("restaurantName",restaurantData.restaurantName);
+    formData.append("city",restaurantData.city);
+    formData.append("country",restaurantData.country);
+    formData.append("deliveryTime",restaurantData.deliveryTime.toString());
+    formData.append("cuisines",JSON.stringify(restaurantData.cuisines));
+
+    if(restaurantData.image){
+      formData.append("image",restaurantData.image);
+    }
+    
+   if(restaurant){
+      await updateRestaurant(formData);
+   }else{
+      await createRestaurant(formData);
+   }
   };
 
+
+  
   return (
     <div className="max-w-6xl mx-auto my-10 px-4">
       <h1 className="text-2xl md:text-3xl font-bold md:font-extrabold">
         Add Restaurant
       </h1>
 
-      <form onSubmit={formHandler}>
+      <form onSubmit={formHandler} encType="multipart/form-data" method="post">
         <div className="grid md:grid-cols-2 gap-4 mt-4">
           <div>
             <Label htmlFor="restaurantName">Restaurant Name</Label>
@@ -159,7 +179,7 @@ const Restaurant = () => {
             disabled={loading}
           >
             {loading && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-            {loading ? "Submitting..." : "Add"}
+            {loading ? "Submitting..." : restaurant?"Update":"Add"}
           </Button>
         </div>
       </form>
