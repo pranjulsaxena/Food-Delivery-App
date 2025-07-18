@@ -34,7 +34,13 @@ export const createRestaurant = async (req: Request, res: Response) => {
       imageUrl,
       cuisines: JSON.parse(cuisines),
     });
-    res.status(201).json({message:"Restaurant created successfully!", Restaurant,success:true});
+    res
+      .status(201)
+      .json({
+        message: "Restaurant created successfully!",
+        Restaurant,
+        success: true,
+      });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -64,7 +70,7 @@ export const updateRestaurant = async (req: Request, res: Response) => {
   const file = req.file;
   const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
   try {
-    const Restaurant = await restaurant.findOne({ user: req.userId });
+    let Restaurant = await restaurant.findOne({ user: req.userId });
     if (!Restaurant) {
       res.status(401).json({ success: false, message: "Restaurant not found" });
       return;
@@ -73,7 +79,7 @@ export const updateRestaurant = async (req: Request, res: Response) => {
     const imageUrl = file
       ? await uploadImageCloudinary(file as Express.Multer.File)
       : Restaurant.imageUrl;
-    await restaurant.findOneAndUpdate(
+    Restaurant = await restaurant.findOneAndUpdate(
       { user: req.userId },
       {
         imageUrl,
@@ -82,12 +88,13 @@ export const updateRestaurant = async (req: Request, res: Response) => {
         country,
         deliveryTime,
         cuisines: JSON.parse(cuisines),
-      }
+      },
+      { new: true }
     );
     res.status(200).json({
       success: true,
       message: "Restaurant updated successfully",
-      restaurant,
+      Restaurant,
     });
   } catch (error) {
     console.log(error);

@@ -9,9 +9,10 @@ axios.defaults.withCredentials = true; // jwt token will be sent in request head
 
 type Restaurant={
   restaurantName:string,
+  city:string,
   cuisines:[],
   country:string,
-  deliveryTime:string,
+  deliveryTime:number,
   imageUrl:undefined;
 }
 
@@ -49,11 +50,9 @@ export const useRestaurantOrder = create<useRestaurantType>()(
 
       getrestaurant: async () => {
         try {
-          set({ loading: true });
           const response = await axios.get(`${API_ENDPOINT}/`);
           if (response.data.success) {
             set({ loading: false, restaurant: response.data.Restaurant });
-            toast.success(response.data.restaurant);
           }
         } catch (error: any) {
           set({ loading: false });
@@ -61,8 +60,6 @@ export const useRestaurantOrder = create<useRestaurantType>()(
           toast.error(error.response.data.message);
         }
       },
-
-      
       updateRestaurant: async (formdata: FormData) => {
         try {
           set({ loading: true });
@@ -70,7 +67,7 @@ export const useRestaurantOrder = create<useRestaurantType>()(
             headers: { "Content-Type": "multipart/form-data" },
           });
           if (response.data.success) {
-            set({ loading: false, restaurant: response.data.data });
+            set({ loading: false, restaurant: response.data.Restaurant });
             toast.success(response.data.message);
           }
         } catch (error: any) {

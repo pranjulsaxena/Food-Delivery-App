@@ -7,7 +7,7 @@ import React, {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {useRestaurantOrder} from "../../store/useRestaurantStore";
+import { useRestaurantOrder } from "../../store/useRestaurantStore";
 import {
   restaurantSchema,
   type restaurantType,
@@ -15,7 +15,13 @@ import {
 import { Loader2 } from "lucide-react";
 
 const Restaurant = () => {
-  const {loading,createRestaurant,restaurant,updateRestaurant}:any = useRestaurantOrder();
+  const {
+    loading,
+    createRestaurant,
+    restaurant,
+    updateRestaurant,
+    getrestaurant,
+  } = useRestaurantOrder();
   const [restaurantData, setRestaurantData] = useState<restaurantType>({
     restaurantName: "",
     city: "",
@@ -39,9 +45,8 @@ const Restaurant = () => {
     }
   };
 
-  const formHandler = async(e: FormEvent<HTMLFormElement>) => {
+  const formHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
 
     const result = restaurantSchema.safeParse(restaurantData);
     if (!result.success) {
@@ -51,29 +56,50 @@ const Restaurant = () => {
     }
     // api implementation starts here
     const formData = new FormData();
-    formData.append("restaurantName",restaurantData.restaurantName);
-    formData.append("city",restaurantData.city);
-    formData.append("country",restaurantData.country);
-    formData.append("deliveryTime",restaurantData.deliveryTime.toString());
-    formData.append("cuisines",JSON.stringify(restaurantData.cuisines));
+    formData.append("restaurantName", restaurantData.restaurantName);
+    formData.append("city", restaurantData.city);
+    formData.append("country", restaurantData.country);
+    formData.append("deliveryTime", restaurantData.deliveryTime.toString());
+    formData.append("cuisines", JSON.stringify(restaurantData.cuisines));
 
-    if(restaurantData.image){
-      formData.append("image",restaurantData.image);
+    if (restaurantData.image) {
+      formData.append("image", restaurantData.image);
     }
-    
-   if(restaurant){
+
+    if (restaurant) {
       await updateRestaurant(formData);
-   }else{
+    } else {
       await createRestaurant(formData);
-   }
+    }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await getrestaurant();
+    };
+    fetchData();
+  }, [getrestaurant]);
 
-  
+  useEffect(() => {
+      if (restaurant) {
+        setRestaurantData({
+          restaurantName: restaurant.restaurantName || "",
+          city: restaurant.city || "",
+          country: restaurant.country || "",
+          deliveryTime: restaurant.deliveryTime || 0,
+          cuisines: restaurant.cuisines
+            ? restaurant.cuisines.map((cuisines: string) => cuisines)
+            : [],
+          image: undefined,
+        });
+      
+    };
+  }, [restaurant]);
+
   return (
     <div className="max-w-6xl mx-auto my-10 px-4">
       <h1 className="text-2xl md:text-3xl font-bold md:font-extrabold">
-        Add Restaurant
+      {restaurant ?"Update Restaurant" :"Add Restaurant"}
       </h1>
 
       <form onSubmit={formHandler} encType="multipart/form-data" method="post">
@@ -89,7 +115,9 @@ const Restaurant = () => {
               onChange={changeHandler}
             />
             {errors.restaurantName && (
-              <span className="text-red-500 text-sm">{errors.restaurantName}</span>
+              <span className="text-red-500 text-sm">
+                {errors.restaurantName}
+              </span>
             )}
           </div>
 
@@ -124,7 +152,9 @@ const Restaurant = () => {
           </div>
 
           <div>
-            <Label htmlFor="deliveryTime">Estimated Delivery Time (minutes)</Label>
+            <Label htmlFor="deliveryTime">
+              Estimated Delivery Time (minutes)
+            </Label>
             <Input
               id="deliveryTime"
               name="deliveryTime"
@@ -134,7 +164,9 @@ const Restaurant = () => {
               onChange={changeHandler}
             />
             {errors.deliveryTime && (
-              <span className="text-red-500 text-sm">{errors.deliveryTime}</span>
+              <span className="text-red-500 text-sm">
+                {errors.deliveryTime}
+              </span>
             )}
           </div>
 
@@ -144,11 +176,14 @@ const Restaurant = () => {
               id="cuisines"
               name="cuisines"
               type="text"
+              value={restaurantData.cuisines.join(", ")}
               placeholder="e.g. Momos, Biryani, Chole Bhature"
               onChange={(e) =>
                 setRestaurantData({
                   ...restaurantData,
-                  cuisines: e.target.value.split(",").map((item) => item.trim()),
+                  cuisines: e.target.value
+                    .split(",")
+                    .map((item) => item.trim()),
                 })
               }
             />
@@ -166,9 +201,7 @@ const Restaurant = () => {
               accept="image/*"
               onChange={changeHandler}
             />
-            {errors.image && (
-              <span className="text-red-500 text-sm">{}</span>
-            )}
+            {errors.image && <span className="text-red-500 text-sm">{}</span>}
           </div>
         </div>
 
@@ -179,7 +212,7 @@ const Restaurant = () => {
             disabled={loading}
           >
             {loading && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-            {loading ? "Submitting..." : restaurant?"Update":"Add"}
+            {loading ? "Submitting..." : restaurant ? "Update" : "Add"}
           </Button>
         </div>
       </form>
