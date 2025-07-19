@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
+import React, { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Loader2, Plus } from "lucide-react";
 import EditMenu from "@/components/EditMenu";
 import pizzaImage from "@/assets/pizza.png";
+import { useMenuStore } from "../../store/useMenuStore";
+import { useRestaurantOrder } from "../../store/useRestaurantStore";
 
 type MenuItem = {
   Name: string;
@@ -24,14 +26,16 @@ type MenuItem = {
 };
 
 const AddMenu = () => {
+
+  const {restaurant,getrestaurant} = useRestaurantOrder();
+  const { loading, createMenu,menu } = useMenuStore();
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [selectedInput, setSelectedInput] = useState<MenuItem>({
     Name: "",
     Description: "",
     Price: 0,
-    MenuImage: undefined,
+    MenuImage: "",
   });
   const [input, setInput] = useState<MenuItem>({
     Name: "",
@@ -40,27 +44,20 @@ const AddMenu = () => {
     MenuImage: undefined,
   });
 
-  const dummyData: MenuItem[] = [
-    {
-      MenuImage: pizzaImage,
-      Name: "Pizza",
-      Price: 80,
-      Description: "Delicious cheesy pizza with a crispy crust.",
-    },
-    {
-      MenuImage: pizzaImage,
-      Name: "Burger",
-      Price: 60,
-      Description: "Juicy grilled burger with fresh lettuce.",
-    },
-    {
-      MenuImage: pizzaImage,
-      Name: "Pasta",
-      Price: 100,
-      Description: "Creamy white sauce pasta with veggies.",
-    },
-  ];
+  const formdata = new FormData();
 
+  formdata.append("name", input.Name);
+  formdata.append("description", input.Description);
+  formdata.append("price", input.Price.toString());
+
+  if (input.MenuImage) {
+    formdata.append("image", input.MenuImage);
+  }
+
+ 
+
+    const data = restaurant?.menus;
+    console.log(data);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, files } = e.target;
     if (type === "file" && files?.length) {
@@ -73,18 +70,15 @@ const AddMenu = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     console.log("Submitted:", input);
+    await createMenu(formdata);
     // simulate network delay
-    setTimeout(() => {
-      setLoading(false);
-      setOpen(false);
-      setInput({ Name: "", Description: "", Price: 0, MenuImage: undefined });
-    }, 1000);
   };
-
+  useEffect(()=>{
+    getrestaurant()
+  },[menu])
   return (
     <div className="max-w-6xl mx-auto my-10">
       <div className="flex justify-between items-center">
@@ -166,36 +160,36 @@ const AddMenu = () => {
 
       {/* Menu Items */}
       <div className="mt-10 space-y-4">
-        {dummyData.map((item, index) => (
+        {data&&data.map((item:any, index) => (
           <div
             key={index}
             className="flex flex-col md:flex-row gap-3 items-center shadow-lg p-4 rounded-md"
           >
             <img
               src={
-                typeof item.MenuImage === "string"
-                  ? item.MenuImage
-                  : item.MenuImage
-                  ? URL.createObjectURL(item.MenuImage)
+                typeof item.imageUrl === "string"
+                  ? item.imageUrl
+                  : item.imageUrl
+                  ? URL.createObjectURL(item.imageUrl)
                   : ""
               }
               className="h-16 w-full md:w-24 md:h-24 object-cover"
-              alt={item.Name}
+              alt={item.name}
             />
             <div className="flex-1">
               <h1 className="text-lg md:text-xl font-extrabold text-gray-800">
-                {item.Name}
+                {item.name}
               </h1>
-              <p className="text-gray-500 text-sm mt-1">{item.Description}</p>
+              <p className="text-gray-500 text-sm mt-1">{item.description}</p>
               <h2 className="text-md font-semibold mt-2">
-                Price: <span className="text-[#D19254]">₹{item.Price}</span>
+                Price: <span className="text-[#D19254]">₹{item.price}</span>
               </h2>
             </div>
             <Button
               className="bg-[#D19254] hover:bg-[#d18c47]"
               onClick={() => {
+                setSelectedInput({Name:item.name,Description:item.description,Price:item.price,MenuImage:item.imageUrl})
                 setEditOpen(true);
-                setSelectedInput(item);
               }}
             >
               Edit

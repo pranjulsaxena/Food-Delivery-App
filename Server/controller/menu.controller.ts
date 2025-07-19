@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 export const createMenu = async (req: Request, res: Response) => {
   try {
-    const Restaurant = await restaurant.findOne({ user: req.userId });
+    const Restaurant = await restaurant.findOne({ user: req.userId })
     if (!Restaurant) {
       res.status(404).json({
         success: "false",
@@ -25,13 +25,13 @@ export const createMenu = async (req: Request, res: Response) => {
 
     const menu = await Menu.create({ name, description, price, imageUrl });
 
-    (Restaurant.menus as mongoose.Schema.Types.ObjectId[]).push(
+    (Restaurant.menus).push(
       menu._id as mongoose.Schema.Types.ObjectId
     );
-
+    Restaurant.save();
     res
       .status(201)
-      .json({ success: true, message: "Menu added successfully", menu });
+      .json({ success: true, message: "Menu added successfully", menu,Restaurant });
     return;
   } catch (error) {
     console.log(error);

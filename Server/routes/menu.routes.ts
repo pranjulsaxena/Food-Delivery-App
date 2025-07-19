@@ -6,9 +6,9 @@ import { createMenu, editMenu } from "../controller/menu.controller";
 
 const router = express.Router();
 
-router.route("/")
-    .post(isAuthenticated,upload.single("image"),createMenu)
-    .put(isAuthenticated,upload.single("image"),editMenu);
+router.route("/").post(isAuthenticated,upload.single("image"),createMenu)
+
+router.route("/:id").put(isAuthenticated,upload.single("image"),editMenu);
 
 
 export default router;

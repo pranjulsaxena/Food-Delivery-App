@@ -7,6 +7,13 @@ const API_ENDPOINT = "http://localhost:5000/api/v1/restaurant";
 
 axios.defaults.withCredentials = true; // jwt token will be sent in request header for each request
 
+type Menu = {
+    Name:string;
+    Description:string;
+    Price:number;
+    MenuImage:undefined;
+}
+
 type Restaurant={
   restaurantName:string,
   city:string,
@@ -14,6 +21,7 @@ type Restaurant={
   country:string,
   deliveryTime:number,
   imageUrl:undefined;
+  menus:Menu[]
 }
 
 type useRestaurantType = {

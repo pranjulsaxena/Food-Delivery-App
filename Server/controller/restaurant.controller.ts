@@ -7,7 +7,7 @@ export const createRestaurant = async (req: Request, res: Response) => {
   try {
     const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
     const file = req.file;
-    let Restaurant = await restaurant.findOne({ user: req.userId });
+    let Restaurant = await restaurant.findOne({ user: req.userId })
     // we assumed that only one person can have one restaurant
     if (Restaurant) {
       res.status(400).json({
@@ -19,6 +19,7 @@ export const createRestaurant = async (req: Request, res: Response) => {
     if (!file) {
       res.status(400).json({
         success: false,
+
         message: "Restaurant Banner is required",
       });
       return;
