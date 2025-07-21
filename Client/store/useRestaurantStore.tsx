@@ -21,15 +21,21 @@ type Restaurant={
   country:string,
   deliveryTime:number,
   imageUrl:undefined;
-  menus:Menu[]
+  menus:Menu[];
+  _id:string;
 }
 
 type useRestaurantType = {
   loading:boolean;
   restaurant:null | Restaurant;
+  searchedrestaurant:Restaurant[];
+  filteredCuisines:string[];
+  singleRestaurant:any;
+  setfilteredCuisines:(data:string[])=>void;
   createRestaurant:(formdata:FormData)=>Promise<void>;
   getrestaurant:()=>Promise<void>;
   updateRestaurant:(formData:FormData)=>Promise<void>;
+  searchRestaurant:(searchQuery:string,searchText:string,selectedCuisines:any)=>Promise<void>;
 }
 
 export const useRestaurantOrder = create<useRestaurantType>()(
@@ -37,6 +43,9 @@ export const useRestaurantOrder = create<useRestaurantType>()(
     (set) => ({
       restaurant: null,
       loading: false,
+      singleRestaurant:null,
+      searchedrestaurant:[],
+      filteredCuisines:[],
       
 
       createRestaurant: async (FormData: FormData) => {
@@ -83,6 +92,32 @@ export const useRestaurantOrder = create<useRestaurantType>()(
           toast.error(error.response.data.message);
         }
       },
+      searchRestaurant:async(searchText:string,searchQuery:string,selectedCuisines:any)=>{
+        try{
+          set({loading:true});
+          const params =new URLSearchParams();
+          params.set("searchQuery",searchQuery);
+          console.log(searchText);
+          params.set("selectedCuisines",selectedCuisines);
+          console.log(selectedCuisines);
+          // const response = await axios.post(`${API_ENDPOINT}/${searchText}?searchQuery=${searchQuery}&selectedCuisines=${selectedCuisines}`);
+          const response = await axios.get(`${API_ENDPOINT}/search/${searchText}?${params.toString()}`);
+          console.log(selectedCuisines);
+
+          if(response.data.success){
+            set({loading:false,searchedrestaurant:response.data.data});
+
+          }
+        }catch(error:any){
+          set({loading:false});
+          toast.error(error.response.data.message);
+
+        }
+      },
+      setfilteredCuisines:(data:string[])=>{
+        set({ filteredCuisines: data })
+      },
+      
     }),
     {
       name: "restaurant-storage",

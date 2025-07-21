@@ -2,12 +2,21 @@ import React from "react";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
+import { useRestaurantOrder } from "../../store/useRestaurantStore";
 
 function Filter() {
   type filterOptionState = {
     id: string;
     label: string;
   };
+
+  const filteredCuisines = useRestaurantOrder(
+    (state) => state.filteredCuisines
+  );
+
+  const setfilteredCuisines = useRestaurantOrder(
+    (state) => state.setfilteredCuisines
+  );
 
   const filterOptions: filterOptionState[] = [
     { id: "burger", label: "Burger" },
@@ -17,14 +26,29 @@ function Filter() {
   ];
 
   const appliedFilterHandler = (label: string) => {
-    alert(label);
+    const isFiltered = filteredCuisines.includes(label);
+    let newString: string[];
+
+    if (!isFiltered) {
+      newString = [...filteredCuisines, label];
+    } else {
+      newString = filteredCuisines.filter((cuisines) => cuisines !== label);
+    }
+
+    // ❌ This call was problematic because it was appending again inside the setter
+    setfilteredCuisines(newString); 
   };
 
   return (
     <div className="md:w-72 w-full p-6 bg-white rounded-xl shadow-lg border border-gray-200">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="font-semibold text-lg text-gray-800">Filter by Cuisines</h1>
-        <Button variant="link" className="text-sm text-[#D19254] hover:underline">
+        <h1 className="font-semibold text-lg text-gray-800">
+          Filter by Cuisines
+        </h1>
+        <Button
+          variant="link"
+          className="text-sm text-[#D19254] hover:underline"
+        >
           Reset
         </Button>
       </div>

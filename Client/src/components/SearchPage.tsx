@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from "react";
+import React, { useEffect, useState, type ChangeEvent } from "react";
 import { Link, Links, useParams, useSearchParams } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -9,13 +9,24 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import pizzaImage from "@/assets/pizza.png";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import SearchPageSkeleton from "./SearchPageSkeleton";
+import { useRestaurantOrder } from "../../store/useRestaurantStore";
 
 function SearchPage() {
   const Params = useParams();
+  const { filteredCuisines, searchRestaurant ,searchedrestaurant,loading} = useRestaurantOrder();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  useEffect(() => {
+    
+      searchRestaurant(Params.text!, searchQuery, filteredCuisines.join(","));
+      console.log(searchedrestaurant);
+ 
+  }, [Params.text!,searchQuery,filteredCuisines]);
+  if (loading){
+    return <SearchPageSkeleton/>
+  }
   return (
-    <div className="max-w-10xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-5 my-10">
+    <>{searchedrestaurant?<div className="max-w-10xl mx-auto px-4 md:px-8 flex flex-col md:flex-row gap-5 my-10">
       <Filter />
       <div className="flex-1 flex flex-col">
         <div className="w-full flex gap-2 px-1">
@@ -32,7 +43,7 @@ function SearchPage() {
         <div className="">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-2 my-3 ">
             <div className="">
-              <h2 className="font-bold">(2) Search results found</h2>
+              <h2 className="font-bold">{searchedrestaurant.length} Search results found</h2>
               <div>
                 {["Biryani", "Momos", "Chole Bhature"].map(
                   (selectedFilter, idx) => (
@@ -55,16 +66,16 @@ function SearchPage() {
         </div>
 
         {/* Searched items displayed here  */}
-        <div className="grid md:grid-cols-3 gap-4 mx-auto md:w-full">
-          {[1, 2, 3, 4, 5].map((_, index) => (
+        <div className="grid md:grid-cols-3 gap-4 mx-auto md:w-full py-6">
+          {searchedrestaurant.map((restaurant, index) => (
             <Card
               key={index}
-              className="w-[300px] overflow-hidden rounded-md shadow-2xl pt-6 pb-0"
+              className="w-[300px] overflow-hidden rounded-md shadow-2xl  pb-0"
             >
               <div className="relative">
                 <AspectRatio ratio={16 / 9}>
                   <img
-                    src={pizzaImage}
+                    src={restaurant.imageUrl}
                     alt="Delicious pizza"
                     className="size-full  object-cover rounded-md"
                   />
@@ -74,19 +85,19 @@ function SearchPage() {
                 </div>
               </div>
               <CardContent className="flex flex-col gap-2">
-                <h1 className="text-xl font-bold">Pizza Hunt</h1>
+                <h1 className="text-xl font-bold">{restaurant.restaurantName}</h1>
 
                 <div className="flex items-center  text-gray-600 text-sm">
                   <MapPin className=" mr-1" />
-                  City: <span className="font-bold mx-1"> Delhi</span>
+                  City: <span className="font-bold mx-1">{restaurant.city}</span>
                 </div>
                 <div className="flex text-gray-600 text-sm">
                   <Globe className="mr-1" /> Country:
-                  <span className="font-bold mx-1">India</span>
+                  <span className="font-bold mx-1">{restaurant.country}</span>
                 </div>
 
                 <div>
-                  {["Pizza", "Momos", "Burger"].map(
+                  {restaurant.cuisines.map(
                     (cuisine: string, idx: number) => (
                       <div key={idx} className="inline-flex mr-2 relative">
                         <Badge
@@ -101,7 +112,7 @@ function SearchPage() {
                 </div>
               </CardContent>
               <CardFooter className="p-4 border-t dark:border-t-gray-700 border-t-gray-100 text-white flex justify-end">
-                <Link to={`/restaurant/${123}`}>
+                <Link to={`/restaurant/${restaurant._id}`}>
                   <Button className="rounded-full bg-[#D19254] hover:bg-[#d18c47] transition-colors duration-300 font-semibold shadow-md px-4 pt-2">
                     View More
                   </Button>
@@ -111,7 +122,7 @@ function SearchPage() {
           ))}
         </div>
       </div>
-    </div>
+    </div>:<NoResultFound searchText={"Mumbai"}/>}</>
   );
 }
 
@@ -122,7 +133,7 @@ const NoResultFound = ({ searchText }: { searchText: string }) => {
         No results found
       </h1>
       <p className="mt-2 text-gray-500 dark:text-gray-400">
-        We couldn't find any results for "{searchText}". <br /> Try searching
+        We couldn't find any results for {searchText}. <br /> Try searching
         with a different term.
       </p>
       <Link to="/">
