@@ -153,7 +153,6 @@ export const searchRestaurant = async (req: Request, res: Response) => {
       .split(",")
       .filter((cuisines) => cuisines);
     const query: any = {};
-
     // basic search based on searchText (name,city,country)
     if (searchText) {
       query.$or = [
@@ -185,14 +184,14 @@ export const getSingleRestaurant = async (req: Request, res: Response) => {
   const restaurantId = req.params.id;
   try {
     const Restaurant = await restaurant
-      .findById(restaurantId)
+      .findOne({_id:restaurantId})
       .populate({ path: "menus", options: { createdAt: -1 } });
 
     if (!Restaurant) {
       res.status(401).json({ success: false, message: "Not restaurant found" });
       return;
     }
-    res.status(200).json({ Restaurant });
+    res.status(200).json({ Restaurant,success:true });
     return;
   } catch (error) {
     console.log(error);

@@ -35,7 +35,7 @@ function Filter() {
       newString = filteredCuisines.filter((cuisines) => cuisines !== label);
     }
 
-    // ❌ This call was problematic because it was appending again inside the setter
+   
     setfilteredCuisines(newString); 
   };
 
@@ -48,6 +48,7 @@ function Filter() {
         <Button
           variant="link"
           className="text-sm text-[#D19254] hover:underline"
+          onClick={()=>{setfilteredCuisines([])}}
         >
           Reset
         </Button>
@@ -61,6 +62,7 @@ function Filter() {
           >
             <Checkbox
               id={filter.id}
+              checked={filteredCuisines.includes(filter.label)}
               onClick={() => appliedFilterHandler(filter.label)}
               className="accent-[#D19254]"
             />
