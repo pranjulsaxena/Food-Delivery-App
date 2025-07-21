@@ -36,6 +36,7 @@ type useRestaurantType = {
   getrestaurant:()=>Promise<void>;
   updateRestaurant:(formData:FormData)=>Promise<void>;
   searchRestaurant:(searchQuery:string,searchText:string,selectedCuisines:any)=>Promise<void>;
+  getSingleRestaurant:(id:string)=>Promise<void>;
 }
 
 export const useRestaurantOrder = create<useRestaurantType>()(
@@ -117,7 +118,18 @@ export const useRestaurantOrder = create<useRestaurantType>()(
       setfilteredCuisines:(data:string[])=>{
         set({ filteredCuisines: data })
       },
-      
+      getSingleRestaurant:async(id:string)=>{
+        try{
+          set({loading:true});
+          const response = await axios.get(`${API_ENDPOINT}/${id}`);
+          if(response.data.success){
+            set({loading:false,singleRestaurant:response.data.Restaurant});
+          }
+        }catch(error){
+          set({loading:false});
+          console.log(error);
+        }
+      } 
     }),
     {
       name: "restaurant-storage",
