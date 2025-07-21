@@ -18,7 +18,16 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
-import { menuSchema, type MenuType } from "@/schema/menuSchema";
+import { menuSchema,  } from "@/schema/menuSchema";
+import { useMenuStore } from "../../store/useMenuStore";
+
+type Menu={
+   Name: string,
+    Description: string,
+    Price: number,
+    MenuImage: undefined |string|File,
+    id?:string
+}
 
 const EditMenu = ({
   editOpen,
@@ -27,17 +36,19 @@ const EditMenu = ({
 }: {
   editOpen: boolean;
   setEditOpen: Dispatch<SetStateAction<boolean>>;
-  selectedInput: MenuType;
+  selectedInput: Menu;
 }) => {
-  const [loading, setLoading] = useState(false);
-  const [inputData, setInputData] = useState<MenuType>({
+  const { loading, editMenu } = useMenuStore();
+  const [inputData, setInputData] = useState<Menu>({
     Name: "",
     Description: "",
     Price: 0,
     MenuImage: "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof MenuType, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof Menu, string>>>(
+    {}
+  );
 
   useEffect(() => {
     setInputData(selectedInput);
@@ -55,31 +66,33 @@ const EditMenu = ({
     }
   };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const result = menuSchema.safeParse(inputData);
-if (!result.success) {
-  const fieldErrors = result.error.flatten().fieldErrors;
-  const errorMap: Partial<Record<keyof MenuType, string>> = {};
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+      const errorMap: Partial<Record<keyof Menu, string>> = {};
 
-  Object.entries(fieldErrors).forEach(([key, value]) => {
-    errorMap[key as keyof MenuType] = value?.[0] ?? "";
-  });
+      Object.entries(fieldErrors).forEach(([key, value]) => {
+        errorMap[key as keyof Menu] = value?.[0] ?? "";
+      });
 
-  setErrors(errorMap);
-  return;
-}
+      setErrors(errorMap);
+      return;
+    }
+    const formData = new FormData();
+    formData.append("name", inputData.Name);
+    formData.append("description", inputData.Description);
+    formData.append("price", inputData.Price.toString());
+    if (inputData.MenuImage) {
+      formData.append("image", inputData.MenuImage);
+    }
 
-
-    setErrors({});
-    setLoading(true);
-
-    setTimeout(() => {
-      console.log("Validated Menu Data:", inputData);
-      setLoading(false);
-      setEditOpen(false);
-    }, 1500);
+    if(inputData.id){
+      await editMenu(inputData.id,formData);
+    }
+    setEditOpen(false);
   };
 
   return (
@@ -103,7 +116,9 @@ if (!result.success) {
                 value={inputData.Name}
                 onChange={changeHandler}
               />
-              {errors.Name && <p className="text-sm text-red-500">{errors.Name}</p>}
+              {errors.Name && (
+                <p className="text-sm text-red-500">{errors.Name}</p>
+              )}
             </div>
 
             <div>
@@ -129,7 +144,9 @@ if (!result.success) {
                 value={inputData.Price}
                 onChange={changeHandler}
               />
-              {errors.Price && <p className="text-sm text-red-500">{errors.Price}</p>}
+              {errors.Price && (
+                <p className="text-sm text-red-500">{errors.Price}</p>
+              )}
             </div>
 
             <div>

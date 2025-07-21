@@ -45,7 +45,7 @@ export const editMenu = async (req: Request, res: Response) => {
     const { name, description, price } = req.body;
     const file = req.file;
 
-    let menu = await Menu.findById(id);
+    let menu = await Menu.findOne({_id:id});
     if (!menu) {
        res.status(404).json({ success: false, message: "No menu found" });
        return;
@@ -53,8 +53,8 @@ export const editMenu = async (req: Request, res: Response) => {
 
     const imageUrl = file ? await uploadImageCloudinary(file) : "";
 
-    const updatedMenu = await Menu.findByIdAndUpdate(
-      id,
+    const updatedMenu = await Menu.findOneAndUpdate(
+      {_id:id},
       {
         name: name || menu.name,
         price: price || menu.price,

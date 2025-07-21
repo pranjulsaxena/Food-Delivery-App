@@ -23,6 +23,7 @@ type MenuItem = {
   Description: string;
   Price: number;
   MenuImage: File | string | undefined;
+  id?:string;
 };
 
 const AddMenu = () => {
@@ -36,6 +37,7 @@ const AddMenu = () => {
     Description: "",
     Price: 0,
     MenuImage: "",
+    id:""
   });
   const [input, setInput] = useState<MenuItem>({
     Name: "",
@@ -57,7 +59,6 @@ const AddMenu = () => {
  
 
     const data = restaurant?.menus;
-    console.log(data);
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, files } = e.target;
     if (type === "file" && files?.length) {
@@ -188,7 +189,7 @@ const AddMenu = () => {
             <Button
               className="bg-[#D19254] hover:bg-[#d18c47]"
               onClick={() => {
-                setSelectedInput({Name:item.name,Description:item.description,Price:item.price,MenuImage:item.imageUrl})
+                setSelectedInput({Name:item.name,Description:item.description,Price:item.price,MenuImage:item.imageUrl,id:item._id.toString()})
                 setEditOpen(true);
               }}
             >
