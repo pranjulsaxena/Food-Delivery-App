@@ -78,7 +78,6 @@ export const login = async (req: Request, res: Response) => {
     user.lastlogin = new Date();
     await user.save();
 
-    // send user without password
     const userWithoutPassword = await User.findOne({ email });
     res.status(200).json({
       success: true,
@@ -111,7 +110,6 @@ export const verifyEmail = async (req: Request, res: Response) => {
     user.verificationExpiredAt = undefined;
     await user.save();
 
-    // send welcome email
     await sendWelcomeEmail(user.email, user.fullName);
 
     res.status(200).json({
@@ -127,10 +125,10 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token",).status(200).json({
-            success: true,
-            message: "Logged out successfully."
-        });
+    res.clearCookie("token").status(200).json({
+      success: true,
+      message: "Logged out successfully.",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -153,7 +151,6 @@ export const forgotPassword = async (req: Request, res: Response) => {
     user.resetPasswordTokenExpiredAt = resetTokenExpiresAt;
     await user.save();
 
-    // send email
     await sendPasswordResetEmail(
       user.email,
       `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`
@@ -184,14 +181,12 @@ export const resetPassword = async (req: Request, res: Response) => {
         .json({ success: false, message: "Invalid or expired reset token" });
       return;
     }
-    // update Password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiredAt = undefined;
     await user.save();
 
-    // send success reset email
     await sendResetSuccessEmail(user.email);
 
     res.status(200).json({
@@ -222,24 +217,40 @@ export const checkAuth = async (req: Request, res: Response) => {
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
-    const { fullName, address, city, country, profilePicture } =
-      req.body;
-    // upload image on cloudinary
+    const { fullName, address, city, country, profilePicture } = req.body;
+
     let cloudResponse: any;
-    cloudResponse = await cloudinary.uploader.upload(profilePicture);
-    const updatedData = { fullName, address, city, country };
+    let profileImageUrl: string | undefined;
+
+    if (profilePicture && profilePicture.startsWith("data:image/")) {
+      // Uploading new profile picture to Cloudinary..."
+      cloudResponse = await cloudinary.uploader.upload(profilePicture);
+      profileImageUrl = cloudResponse.secure_url;
+    } else if (profilePicture) {
+      profileImageUrl = profilePicture;
+      //  Using existing profile picture URL";
+    } else {
+      console.log("b 3 - No profile picture provided");
+    }
+
+    const updatedData: any = {
+      fullName,
+      address,
+      city,
+      country,
+      profilePicture:profileImageUrl,
+    };
+   
 
     const user = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
     }).select("-password");
-
     res.status(200).json({
       success: true,
       user,
       message: "Profile Updated successfully!",
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

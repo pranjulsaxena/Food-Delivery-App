@@ -75,12 +75,11 @@ export const useUserStore = create<userState>()(
         }
       },
       login: async (input: LoginInputState) => {
-
         try {
           set({ loading: true });
           const response = await axios.post(`${API_ENDPOINT}/login`, input, {
             headers: { "Content-Type": "application/json" },
-            withCredentials: true, 
+            withCredentials: true,
           });
           if (response.data.success) {
             console.log(response.data.user);
@@ -116,11 +115,11 @@ export const useUserStore = create<userState>()(
       },
       checkAuth: async () => {
         try {
-          console.log("Inside checkAuth of zustand store.")
+          console.log("Inside checkAuth of zustand store.");
           const response = await axios.get(`${API_ENDPOINT}/check-auth`, {
             withCredentials: true,
           });
-          
+
           if (response.data.success) {
             console.log("all is well");
             set({
@@ -137,7 +136,9 @@ export const useUserStore = create<userState>()(
       logOut: async () => {
         try {
           set({ loading: true });
-          const response = await axios.post(`${API_ENDPOINT}/logout`,null,{withCredentials: true});
+          const response = await axios.post(`${API_ENDPOINT}/logout`, null, {
+            withCredentials: true,
+          });
           if (response.data.success) {
             toast.success(response.data.message);
             set({ loading: false, user: null, isAuthenticated: false });
@@ -162,7 +163,7 @@ export const useUserStore = create<userState>()(
           toast.error(error.response.data.message);
         }
       },
-      resetpassword: async (newPassword:string,token:string) => {
+      resetpassword: async (newPassword: string, token: string) => {
         try {
           set({ loading: true });
           const response = await axios.post(
@@ -178,23 +179,31 @@ export const useUserStore = create<userState>()(
           toast.error(error.response.data.message);
         }
       },
-      updatedetails:async(input:any)=>{
+      updatedetails: async (input: any) => {
         try {
+          console.log(" f 1");
           set({ loading: true });
-          const response = await axios.post(
+          console.log("f 2");
+          const response = await axios.put(
             `${API_ENDPOINT}/profile/update`,
-            {input }
-
+            input,
+            {
+              withCredentials: true,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
           );
+          console.log("F 3");
           if (response.data.success) {
             toast.success(response.data.message);
-            set({ loading: false });
+            set({ loading: false, user: response.data.user });
           }
         } catch (error: any) {
           set({ loading: false });
           toast.error(error.response.data.message);
         }
-      }
+      },
     }),
     {
       name: "UserDetails",
