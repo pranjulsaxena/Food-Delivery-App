@@ -18,7 +18,7 @@ import { useCartStore } from "../../store/useCartStore";
 
 
 const Cart = () => {
-  const {cartItem,clearCartItems,removeCartItems} = useCartStore();
+  const {cartItem,clearCartItems,removeCartItems,increaseQuantity,decreaseQuantity} = useCartStore();
   const [clearAll, setClearAll] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -68,6 +68,8 @@ const Cart = () => {
                         size="icon"
                         variant="ghost"
                         className="p-1 h-6 w-6"
+                         onClick={()=>{decreaseQuantity(item._id)}}
+
                       >
                         <Minus className="w-4 h-4 text-[#D19254]" />
                       </Button>
@@ -78,6 +80,7 @@ const Cart = () => {
                         size="icon"
                         variant="ghost"
                         className="p-1 h-6 w-6"
+                         onClick={()=>{increaseQuantity(item._id)}}
                       >
                         <Plus className="w-4 h-4 text-gray-800" />
                       </Button>
@@ -85,7 +88,7 @@ const Cart = () => {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    {item.total}
+                    {item.price*item.quantity}
                   </TableCell>
 
                   <TableCell className="text-end">
