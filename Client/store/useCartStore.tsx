@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 type cartState = {
   cartItem: cartItemType[];
   setCartItems: (newItem: cartItemType) => void;
+  clearCartItems:()=>void;
 };
 export interface cartItemType {
   name: string;
@@ -53,7 +54,9 @@ export const useCartStore = create<cartState>()(
           }
         });
       },
-      
+      clearCartItems:()=>{
+        set({cartItem:[]});
+      }
     }),
 
     {

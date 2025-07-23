@@ -18,7 +18,8 @@ import { useCartStore } from "../../store/useCartStore";
 
 
 const Cart = () => {
-  const {cartItem,} = useCartStore();
+  const {cartItem,clearCartItems} = useCartStore();
+  const setCartItems = useCartStore((state)=>state.setCartItems);
   const [clearAll, setClearAll] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -27,6 +28,7 @@ const Cart = () => {
         <Button
           onClick={() => {
             setClearAll(true);
+            clearCartItems();
           }}
           variant="link"
           className="text-red-500 hover:text-red-600 transition"

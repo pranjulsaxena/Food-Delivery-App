@@ -46,11 +46,12 @@ import {
 } from "./ui/sheet";
 import { Separator } from "@radix-ui/react-separator";
 import { useUserStore } from "../../store/useUserStore";
+import { useCartStore } from "../../store/useCartStore";
 
 function Navbar() {
   const { loading, user, logOut } = useUserStore();
   const admin = user?.admin;
-
+  const {cartItem} = useCartStore();
   return (
     <div className="max-w-screen mx-auto shadow-xl bg-white  px-2">
       <div className="flex justify-between items-center h-14">
@@ -110,7 +111,7 @@ function Navbar() {
               size={"icon"}
               className="w-3 h-3 rounded-full text-[10px] text-center bg-red-500 absolute -top-2 left-2 hover:bg-red-500"
             >
-              5
+              {cartItem.reduce((total,item)=>total+item.quantity,0)}
             </Button>
           </Link>
 
@@ -206,9 +207,8 @@ const MobileMenu = () => {
             <ShoppingCart />
             <span>Cart</span>
           </Link>
-          {user!.admin && (
+          {user!.admin && 
             <>
-              (
               <Link
                 to="/admin/menus"
                 className="flex gap-2  items-center  mx-6 py-2 rounded-lg mb-2  hover:bg-gray-200 hover:text-gray-900"
@@ -230,9 +230,8 @@ const MobileMenu = () => {
                 <PackageCheck />
                 <span>Restaurant Orders</span>
               </Link>
-              )
             </>
-          )}
+          }
         </SheetDescription>
         <SheetFooter className="flex flex-col">
           <Avatar>
