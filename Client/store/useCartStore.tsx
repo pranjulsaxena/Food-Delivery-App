@@ -6,6 +6,7 @@ type cartState = {
   cartItem: cartItemType[];
   setCartItems: (newItem: cartItemType) => void;
   clearCartItems:()=>void;
+  removeCartItems:(id:string)=>void;
 };
 export interface cartItemType {
   name: string;
@@ -56,9 +57,14 @@ export const useCartStore = create<cartState>()(
       },
       clearCartItems:()=>{
         set({cartItem:[]});
-      }
+      },
+      removeCartItems:(id:string)=>{
+        set((state)=>{
+            const updatedCart = state.cartItem.filter((item)=>item._id!==id);
+            return {cartItem:updatedCart};
+        })
+    }
     }),
-
     {
       name: "Cart-Storage",
       storage: createJSONStorage(() => localStorage),

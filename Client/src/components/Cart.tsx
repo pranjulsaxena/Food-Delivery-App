@@ -18,8 +18,7 @@ import { useCartStore } from "../../store/useCartStore";
 
 
 const Cart = () => {
-  const {cartItem,clearCartItems} = useCartStore();
-  const setCartItems = useCartStore((state)=>state.setCartItems);
+  const {cartItem,clearCartItems,removeCartItems} = useCartStore();
   const [clearAll, setClearAll] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -94,6 +93,7 @@ const Cart = () => {
                       variant="destructive"
                       size="sm"
                       className="bg-[#D19254] hover:bg-[#b97d3d]"
+                      onClick={()=>{removeCartItems(item._id)}}
                     >
                       Remove
                     </Button>
