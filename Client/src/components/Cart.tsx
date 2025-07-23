@@ -11,43 +11,14 @@ import {
 } from "@/components/ui/table";
 import { Avatar } from "./ui/avatar";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import pizzaImage from "@/assets/pizza.png";
 import { Minus, Plus } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
 import CheckOutPage from "./CheckOutPage";
+import { useCartStore } from "../../store/useCartStore";
 
-type data = {
-  itemName: string;
-  price: number;
-  quantity: number;
-  Total?: number;
-  Action?: Element;
-};
 
-const mydata: data[] = [
-  {
-    itemName: "Margherita Pizza",
-    price: 80,
-    quantity: 2,
-  },
-  {
-    itemName: "Veggie Burger",
-    price: 60,
-    quantity: 1,
-  },
-  {
-    itemName: "Paneer Wrap",
-    price: 90,
-    quantity: 3,
-  },
-  {
-    itemName: "Cheese Garlic Bread",
-    price: 50,
-    quantity: 4,
-  },
-];
 
 const Cart = () => {
+  const {cartItem,} = useCartStore();
   const [clearAll, setClearAll] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   return (
@@ -76,17 +47,15 @@ const Cart = () => {
         </TableHeader>
 
         <TableBody>
-          {clearAll
-            ? ""
-            : mydata.map((item, index) => (
+          { cartItem.map((item, index) => (
                 <TableRow className="hover:bg-muted/40 transition" key={index}>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar>
-                        <AvatarImage src={pizzaImage} alt="Pizza" />
+                        <AvatarImage src={item.imageUrl} alt="Pizza" />
                         <AvatarFallback>PN</AvatarFallback>
                       </Avatar>
-                      <span>{item.itemName}</span>
+                      <span>{item.name}</span>
                     </div>
                   </TableCell>
 
@@ -115,7 +84,7 @@ const Cart = () => {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    {item.price * item.quantity}
+                    {item.total}
                   </TableCell>
 
                   <TableCell className="text-end">
@@ -139,7 +108,7 @@ const Cart = () => {
             <TableCell className="text-right font-bold">
               {clearAll
                 ? 0
-                : mydata.reduce(
+                : cartItem.reduce(
                     (sum, current) => sum + current.price * current.quantity,
                     0
                   )}
