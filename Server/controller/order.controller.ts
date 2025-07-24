@@ -6,18 +6,12 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 type checkOutItems = {
-  carItems: {
-    menuId: string;
-    name: string;
-    image: string;
-    price: number;
-    quantity: number;
-  }[];
+  carItems: menuItems[];
   deliveryDetails: {
     email: string;
     name: string;
     address: string;
-    city: string;
+    country: string;
   };
   restaurantId: string;
 };
@@ -49,8 +43,8 @@ export const createCheckOutSession = async (req: Request, res: Response) => {
   try {
     const checkoutSessionRequest: checkOutItems = req.body;
     const Restaurant = await restaurant
-      .findById(checkoutSessionRequest.restaurantId)
-      .populate("menu");
+      .findOne({_id:checkoutSessionRequest.restaurantId})
+      .populate("menus");
 
     if (!Restaurant) {
       res.status(404).json({ success: false, message: "Restaurant not found" });
@@ -62,8 +56,8 @@ export const createCheckOutSession = async (req: Request, res: Response) => {
       deliveryDetails: checkoutSessionRequest.deliveryDetails,
       cartItems: checkoutSessionRequest.carItems,
       status: "pending",
+      totalAmount:checkoutSessionRequest.carItems.reduce((amount,item)=>amount+(item.price*item.quantity),0)
     });
-
     const menuItems = Restaurant.menus;
     const lineItems = createLineItems(checkoutSessionRequest, menuItems);
 
@@ -74,7 +68,7 @@ export const createCheckOutSession = async (req: Request, res: Response) => {
       },
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.FRONTEND_URL}/order/status`,
+      success_url: `${process.env.FRONTEND_URL}/orders/status`,
       cancel_url: `${process.env.FRONTEND_URL}/cart`,
       metadata: {
         orderId: order._id.toString(),
@@ -105,7 +99,7 @@ export const createLineItems = (
   // create line items
   const lineItems = checkoutSessionRequest.carItems.map((carItems) => {
     const menuItem = menuItems.find(
-      (item: any) => item._id === carItems.menuId
+      (item: any) => item._id.toString() === carItems.menuId
     );
 
     if (!menuItem) {

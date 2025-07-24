@@ -16,6 +16,12 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useUserStore } from "../../store/useUserStore";
+import type { CheckOutSessionRequest } from "@/Types/orderTypes";
+import { useCartStore } from "../../store/useCartStore";
+import { useRestaurantOrder } from "../../store/useRestaurantStore";
+import { useOrderStore } from "../../store/useOrderStore";
+import { Loader2 } from "lucide-react";
 
 const CheckOutPage = ({
   open,
@@ -24,12 +30,16 @@ const CheckOutPage = ({
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { cartItem } = useCartStore();
+  const { user } = useUserStore();
+  const { restaurant } = useRestaurantOrder();
+  const { createCheckOutSession, loading } = useOrderStore();
   const [data, setData] = useState({
-    Fullname: "",
-    Email: "",
-    Phone: "",
-    Address: "",
-    Country: "",
+    Fullname: user?.fullName || "",
+    Email: user?.email || "",
+    Phone: user?.contact || "",
+    Address: user?.address || "",
+    City: user?.city || "",
   });
 
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,9 +47,32 @@ const CheckOutPage = ({
     setData({ ...data, [name]: value });
   };
 
-  const formHandler = (e: FormEvent<HTMLFormElement>) => {
+  const formHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted Data:", data);
+
+    const CheckOutSessionRequest: CheckOutSessionRequest = {
+      carItems: cartItem.map((item) => {
+        return {
+          menuId: item._id,
+          name: item.name,
+          price: item.price.toString(),
+          image: item.imageUrl,
+          quantity: item.quantity.toString(),
+        };
+      }),
+      deliveryDetails: {
+        email: data.Email,
+        name: data.Fullname,
+        address: data.Address,
+        city: data.City,
+      },
+      restaurantId: restaurant!._id,
+    };
+    try {
+      await createCheckOutSession(CheckOutSessionRequest);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -52,7 +85,6 @@ const CheckOutPage = ({
           </DialogDescription>
         </DialogHeader>
 
-        
         <form onSubmit={formHandler} className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             {Object.keys(data).map((item) => (
@@ -71,12 +103,22 @@ const CheckOutPage = ({
           </div>
 
           <DialogFooter>
-            <Button
-              type="submit"
-              className="bg-[#D19254] hover:bg-[#d18c47] w-full"
-            >
-              Continue to payment
-            </Button>
+            {loading ? (
+              <Button
+                disabled={true}
+                className="w-full bg-[#D19254] hover:bg-[#d18c47] disabled:cursor-not-allowed"
+              >
+                <Loader2 className="animate-spin mr-2 w-4 h-4"></Loader2>Loading
+                ...
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full bg-[#D19254] hover:bg-[#d18c47]"
+              >
+                Continue to payment
+              </Button>
+            )}
           </DialogFooter>
         </form>
       </DialogContent>
