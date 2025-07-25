@@ -7,7 +7,7 @@ export const createRestaurant = async (req: Request, res: Response) => {
   try {
     const { restaurantName, city, country, deliveryTime, cuisines } = req.body;
     const file = req.file;
-    let Restaurant = await restaurant.findOne({ user: req.userId })
+    let Restaurant = await restaurant.findOne({ user: req.userId });
     // we assumed that only one person can have one restaurant
     if (Restaurant) {
       res.status(400).json({
@@ -35,13 +35,11 @@ export const createRestaurant = async (req: Request, res: Response) => {
       imageUrl,
       cuisines: JSON.parse(cuisines),
     });
-    res
-      .status(201)
-      .json({
-        message: "Restaurant created successfully!",
-        Restaurant,
-        success: true,
-      });
+    res.status(201).json({
+      message: "Restaurant created successfully!",
+      Restaurant,
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
@@ -127,10 +125,10 @@ export const getRestaurantOrders = async (req: Request, res: Response) => {
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
   try {
-    const { ordreId } = req.params;
+    const { orderId } = req.params;
     const { status } = req.body;
 
-    const order = await Order.findById({ _id: ordreId });
+    const order = await Order.findOne({ _id: orderId });
     if (!order) {
       res.status(404).json({ success: false, message: "Order not found" });
       return;
@@ -138,7 +136,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     order.status = status;
     await order.save();
 
-    res.status(200).json({ success: true, message: "Status updated" });
+    res.status(200).json({ success: true, message: "Status updated",status:order.status });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Internal server error" });
@@ -184,14 +182,14 @@ export const getSingleRestaurant = async (req: Request, res: Response) => {
   const restaurantId = req.params.id;
   try {
     const Restaurant = await restaurant
-      .findOne({_id:restaurantId})
+      .findOne({ _id: restaurantId })
       .populate({ path: "menus", options: { createdAt: -1 } });
 
     if (!Restaurant) {
       res.status(401).json({ success: false, message: "Not restaurant found" });
       return;
     }
-    res.status(200).json({ Restaurant,success:true });
+    res.status(200).json({ Restaurant, success: true });
     return;
   } catch (error) {
     console.log(error);
