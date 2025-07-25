@@ -1,5 +1,5 @@
 export type CheckOutSessionRequest = {
-  carItems: {
+  cartItems: {
     menuId: string;
     name: string;
     image: string;
@@ -18,7 +18,7 @@ export type CheckOutSessionRequest = {
 export interface Orders extends CheckOutSessionRequest{
     _id:string;
     status:string;
-    totalAmout:number;
+    totalAmount:number;
 }
 
 export type OrderState = {

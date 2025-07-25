@@ -29,7 +29,19 @@ export const useOrderStore = create<OrderState>()(
           console.log(error);
         }
       },
-      getOrderDetails: async () => {},
+      getOrderDetails: async () => {
+        try{
+          set({loading:true});
+          const response = await axios.get(`${API_ENDPOINT}`);
+          if(response.data.success){
+            set({loading:false,orders:response.data.Orders});
+
+          }
+        }catch(error){
+          set({loading:false});
+          console.log(error);
+        }
+      },
     }),
     {
       name: "ordeDetails",
