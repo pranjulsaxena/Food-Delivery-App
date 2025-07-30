@@ -9,7 +9,7 @@ import swagger from "./utils/swagger";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 const app = express(); 
-const PORT = Number(process.env.PORT) || 8000;
+const PORT = Number(process.env.PORT) || 5000;
 
 import { stripeWebhook } from "./controller/order.controller";
 app.post("/api/v1/order/webhook", express.raw({ type: "application/json" }), stripeWebhook);
