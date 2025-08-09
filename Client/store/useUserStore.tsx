@@ -7,32 +7,10 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import type { userState } from "../src/Types/userTypes";
 
 export const API_ENDPOINT = `http://localhost:5000/api/v1/user`;
-type User = {
-  fullName: string;
-  email: string;
-  contact: number;
-  address: string;
-  country: string;
-  city: string;
-  profilePicture: string;
-  admin: boolean;
-  isVerified: boolean;
-};
-type userState = {
-  user: null | User;
-  isAuthenticated: boolean;
-  isCheckingAuth: boolean;
-  loading: boolean;
-  login: (input: LoginInputState) => Promise<void>;
-  signup: (input: SignupInputState) => Promise<void>;
-  checkAuth: () => Promise<void>;
-  logOut: () => Promise<void>;
-  forgotPasswordapi: (email: string) => Promise<void>;
-  resetpassword: (newPassword: string, token: string) => Promise<void>;
-  updatedetails: (input: any) => Promise<void>;
-};
+
 
 export const useUserStore = create<userState>()(
   persist(
@@ -66,8 +44,6 @@ export const useUserStore = create<userState>()(
               user: response.data.user,
               isAuthenticated: true,
             });
-            let navigate = useNavigate();
-            navigate("http://localhost:5173/verifypassword");
           }
         } catch (error: any) {
           set({ loading: false });

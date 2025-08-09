@@ -87,7 +87,6 @@ function Profile() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
-      {/* Enhanced Header Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 dark:from-orange-600 dark:via-amber-600 dark:to-yellow-600">
         <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
         <div className="relative max-w-7xl mx-auto px-4 py-12 text-center">
@@ -106,11 +105,9 @@ function Profile() {
 
       <div className="max-w-6xl mx-auto px-4 py-8 -mt-6 relative z-1">
         <form onSubmit={formHandler} className="space-y-8">
-          {/* Enhanced Profile Header Card */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/20 border dark:border-gray-700 overflow-hidden">
             <div className="bg-gradient-to-r from-orange-100 to-amber-100 dark:from-gray-700 dark:to-gray-600 p-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
-                {/* Enhanced Avatar Section */}
                 <div className="relative group">
                   <div className="relative w-32 h-32">
                     <Avatar className="w-full h-full ring-4 ring-white dark:ring-gray-600 shadow-2xl">
@@ -141,14 +138,12 @@ function Profile() {
                       </div>
                     </div>
 
-                    {/* Edit Badge */}
                     <div className="absolute -bottom-2 -right-2 bg-orange-500 text-white rounded-full p-2 shadow-lg">
                       <Edit3 className="w-4 h-4" />
                     </div>
                   </div>
                 </div>
 
-                {/* Enhanced Name Section */}
                 <div className="flex-1 text-center md:text-left space-y-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
@@ -175,7 +170,6 @@ function Profile() {
             </div>
           </div>
 
-          {/* Enhanced Form Fields */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/20 border dark:border-gray-700 p-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -264,7 +258,6 @@ function Profile() {
             </div>
           </div>
 
-          {/* Enhanced Action Section */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/20 border dark:border-gray-700 p-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="text-center md:text-left">

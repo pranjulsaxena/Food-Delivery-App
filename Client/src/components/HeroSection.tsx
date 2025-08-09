@@ -11,7 +11,6 @@ function HeroSection() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
-      {/* Enhanced Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-orange-200/30 dark:bg-orange-900/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-200/30 dark:bg-amber-900/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -19,15 +18,12 @@ function HeroSection() {
       </div>
 
       <div className="relative z-1 flex max-w-7xl flex-col md:flex-row mx-auto px-4 py-16 md:py-20 justify-center items-center gap-12 md:gap-16">
-        {/* Enhanced Content Section */}
         <div className="flex flex-col md:w-[55%] gap-8 text-center md:text-left">
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-orange-600 dark:text-orange-400 px-4 py-2 rounded-full text-sm font-medium shadow-lg w-fit mx-auto md:mx-0">
             <Sparkles className="w-4 h-4" />
             #1 Food Delivery Platform
           </div>
 
-          {/* Enhanced Typography */}
           <div className="space-y-6">
             <h1 className="font-bold text-4xl md:text-6xl lg:text-7xl leading-tight">
               <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
@@ -55,7 +51,6 @@ function HeroSection() {
             </p>
           </div>
 
-          {/* Stats Row */}
           <div className="flex justify-center md:justify-start gap-8 text-center">
             <div className="space-y-1">
               <div className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400">
@@ -86,7 +81,6 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Enhanced Search Section */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center justify-center md:justify-start gap-2">
               <MapPin className="w-5 h-5 text-orange-500 dark:text-orange-400" />
@@ -126,7 +120,6 @@ function HeroSection() {
               </div>
             </div>
 
-            {/* Quick Search Tags */}
             <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
               {["Pizza", "Burger", "Chinese", "Indian", "Italian"].map(
                 (tag) => (
@@ -145,7 +138,6 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Delivery Info */}
           <div className="flex items-center justify-center md:justify-start gap-2 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-4 py-2 rounded-full w-fit">
             <Clock className="w-4 h-4" />
             <span className="text-sm font-medium">
@@ -154,9 +146,7 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* Enhanced Image Section */}
         <div className="md:w-[45%] flex justify-center relative">
-          {/* Floating Elements */}
           <div className="absolute -top-6 -left-6 bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 animate-bounce">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
@@ -175,7 +165,6 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Main Image with Enhanced Styling */}
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full blur-3xl opacity-20 scale-110"></div>
             <div className="relative bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-full p-8 shadow-2xl">
@@ -189,7 +178,6 @@ function HeroSection() {
         </div>
       </div>
 
-      {/* Bottom Wave Pattern */}
     </div>
   );
 }

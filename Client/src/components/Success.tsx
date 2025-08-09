@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import pizzaImage from "@/assets/pizza.png";
-import { IndianRupee } from "lucide-react";
-import { Separator } from "./ui/separator";
 import { useOrderStore } from "../../store/useOrderStore";
-import type { Orders } from "@/Types/orderTypes";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { IndianRupee, PackageCheck, Truck, Clock, ClipboardX, ShoppingBag } from "lucide-react";
 
-const OrderItem = ({ name, price,image }: { name: string; price: number,image:string }) => (
-  <div className="flex justify-between items-center gap-4 mb-4">
-    <div className="flex gap-4 items-center">
-      <img
-        src={image}
-        className="size-16 md:size-20 object-cover rounded-md"
-        alt="Order"
+const StatusInfo = {
+  DELIVERED: { variant: "success", icon: <PackageCheck className="w-4 h-4 mr-2" />, text: "Delivered" },
+  "IN PROGRESS": { variant: "warning", icon: <Truck className="w-4 h-4 mr-2" />, text: "In Progress" },
+  PLACED: { variant: "default", icon: <Clock className="w-4 h-4 mr-2" />, text: "Placed" },
+};
+
+const OrderItem = ({ name, price, image, quantity }) => (
+  <div className="flex justify-between items-center py-3 border-b last:border-b-0">
+    <div className="flex items-center gap-3">
+      <img 
+        src={image} 
+        className="size-14 rounded-lg object-cover" 
+        alt={name} 
       />
-      <span className="font-medium text-base md:text-lg">{name}</span>
+      <div>
+        <p className="font-medium text-foreground">{name}</p>
+        <p className="text-sm text-muted-foreground">Qty: {quantity}</p>
+      </div>
     </div>
-    <div className="flex items-center gap-1 font-semibold text-base md:text-lg">
-      <IndianRupee className="w-4 h-4" /> {price}
+    <div className="flex items-center gap-1 font-semibold">
+      <IndianRupee className="w-4 h-4" />
+      {price * quantity}
     </div>
   </div>
 );
@@ -26,59 +35,91 @@ const OrderItem = ({ name, price,image }: { name: string; price: number,image:st
 const Success = () => {
   const { orders, getOrderDetails } = useOrderStore();
 
-  useEffect(() => {
-    getOrderDetails();
-  }, []);
-  if (orders.length == 0) {
+  useEffect(() => { 
+    getOrderDetails(); 
+  }, [getOrderDetails]);
+
+  if (orders.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-muted">
-        <div className="bg-white shadow-xl rounded-xl p-8 max-w-sm w-full text-center">
-          <h1 className="text-2xl font-bold mb-4">No Orders Found</h1>
-          <Link to="/cart">
-            <Button className="w-full bg-[#D19c54] hover:bg-[#d18c47]">
-              Move to Cart
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md text-center p-6">
+          <CardHeader>
+            <div className="mx-auto size-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <ClipboardX className="size-8 text-muted-foreground" />
+            </div>
+            <CardTitle className="text-2xl">No Orders Found</CardTitle>
+            <CardDescription>Start shopping to see your orders here!</CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Button asChild className="w-full">
+              <Link to="/">
+                <ShoppingBag className="w-4 h-4 mr-2" />
+                Start Shopping
+              </Link>
             </Button>
-          </Link>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-muted px-4">
-      {orders.map((item) => (
-        <div className="bg-white rounded-xl shadow-lg p-6  m-10 w-full max-w-xl space-y-6">
-          <h1 className="text-center text-3xl font-extrabold">
-            Order Status:{item.status}
-            <span className="text-[#D19C54] tracking-wide"></span>
-          </h1>
-
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-            {item.cartItems?.map((cartItems) => (
-              <>
-                <OrderItem name={cartItems.name} price={(cartItems.price*cartItems.quantity)} image={cartItems.image}/>
-                <Separator />
-              </>
-            ))}
-          </div>
-
-          <div className="flex justify-between items-center text-lg font-bold pt-4">
-            <span>Total</span>
-            <span className="flex items-center gap-1">
-              <IndianRupee className="w-4 h-4" /> {item.totalAmount}
-            </span>
-          </div>
-
-          <div className="pt-4">
-            <Link to="/">
-              <Button className="w-full bg-[#D19C54] hover:bg-[#d18c47]">
-                Continue Shopping
-              </Button>
-            </Link>
-          </div>
+    <div className="min-h-screen bg-muted/30 p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Simple Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Your Orders</h1>
+          <p className="text-muted-foreground">Track your recent purchases</p>
         </div>
-      ))}
+        
+        {/* Orders Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {orders.map((order) => {
+            const status = order.status.toUpperCase();
+            const statusInfo = StatusInfo[status] || StatusInfo.PLACED;
+            
+            return (
+              <Card key={order._id} className="h-full hover:shadow-md transition-shadow">
+                <CardHeader className="pb-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle className="text-lg">Order #{order._id.slice(-6)}</CardTitle>
+                      <CardDescription>
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </CardDescription>
+                    </div>
+                    <Badge variant={statusInfo.variant}>
+                      {statusInfo.icon}
+                      {statusInfo.text}
+                    </Badge>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="py-0">
+                  <div className="space-y-0">
+                    {order.cartItems?.map((cartItem) => (
+                      <OrderItem key={cartItem.id} {...cartItem} />
+                    ))}
+                  </div>
+                </CardContent>
+                
+                <CardFooter className="flex flex-col gap-4 pt-4">
+                  <div className="flex justify-between items-center w-full text-lg font-bold">
+                    <span>Total</span>
+                    <span className="flex items-center gap-1">
+                      <IndianRupee className="w-5 h-5" />
+                      {order.totalAmount}
+                    </span>
+                  </div>
+                  <Button asChild className="w-full">
+                    <Link to="/">Continue Shopping</Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

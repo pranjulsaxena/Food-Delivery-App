@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Copyright, Mail, MapPin, Phone, Heart, Sparkles, Send } from "lucide-react";
+import { Copyright, Mail, MapPin, Phone, Heart, Sparkles, Send, ChefHat } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -36,9 +36,9 @@ function Footer() {
               <div className="space-y-6">
                 
                 <div className="flex items-center justify-center lg:justify-start gap-3">
-                  <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-xl">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
+                  <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center ">
+              <ChefHat className="w-5 h-5 text-white" />
+            </div>
                   <h1 className="font-bold text-4xl md:text-5xl text-white drop-shadow-lg">
                     InstaFood
                   </h1>

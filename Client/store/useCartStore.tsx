@@ -1,29 +1,16 @@
 import { CardTitle } from "@/components/ui/card";
 import type { MenuType } from "@/schema/menuSchema";
+import type { cartState } from "../src/Types/cartTypes";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import type { Menu } from "@/Types/menuTypes";
 
-type cartState = {
-  cartItem: cartItemType[];
-  setCartItems: (newItem: cartItemType) => void;
-  clearCartItems: () => void;
-  removeCartItems: (id: string) => void;
-  increaseQuantity:(id:string)=>void;
-  decreaseQuantity:(id:string)=>void;
-};
-export interface cartItemType {
-  name: string;
-  price: number;
-  imageUrl: string;
-  quantity: number;
-  _id: string;
-}
 
 export const useCartStore = create<cartState>()(
   persist(
     (set) => ({
       cartItem: [],
-      setCartItems: (newItem: cartItemType) => {
+      setCartItems: (newItem: Menu) => {
         set((state) => {
           const existingCartItem = state.cartItem.find(
             (cartItem) => cartItem._id === newItem._id

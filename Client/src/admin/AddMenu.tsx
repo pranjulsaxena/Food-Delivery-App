@@ -78,7 +78,6 @@ const AddMenu = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
-      {/*  Hero Section with Dark Mode */}
       <div className="relative overflow-hidden bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 dark:from-orange-600 dark:via-amber-600 dark:to-yellow-600">
         <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
         <div className="relative max-w-6xl mx-auto px-4 py-16 text-center">
@@ -206,7 +205,6 @@ const AddMenu = () => {
         </div>
       </div>
 
-      {/* Menu Items Grid with Dark Mode */}
       <div className="max-w-6xl mx-auto px-4 py-12 -mt-8 relative z-1">
         {(!data || data.length === 0) ? (
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-2xl dark:shadow-black/20 p-12 text-center border dark:border-gray-700">

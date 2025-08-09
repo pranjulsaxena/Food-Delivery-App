@@ -7,17 +7,17 @@ export type Restaurant = {
   cuisines: [];
   country: string;
   deliveryTime: number;
-  imageUrl: undefined;
+  imageUrl: string|undefined;
   menus: Menu[];
   _id: string;
 };
 
 export type useRestaurantType = {
   loading: boolean;
-  restaurant: null | Restaurant;
+  restaurant:  null| Restaurant;
   searchedrestaurant: Restaurant[];
   filteredCuisines: string[];
-  singleRestaurant: any;
+  singleRestaurant: Restaurant|null;
   restaurantOrders: Orders[];
   setfilteredCuisines: (data: string[]) => void;
   createRestaurant: (formdata: FormData) => Promise<void>;

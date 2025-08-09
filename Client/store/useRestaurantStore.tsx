@@ -3,56 +3,20 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import axios from "axios";
 import { toast } from "sonner";
 import type { Orders } from "@/Types/orderTypes";
+import type { useRestaurantType } from "@/Types/restaurantTypes";
 
 const API_ENDPOINT = "http://localhost:5000/api/v1/restaurant";
 
 axios.defaults.withCredentials = true; // jwt token will be sent in request header for each request
 
-type Menu = {
-  Name: string;
-  Description: string;
-  Price: number;
-  MenuImage: undefined;
-};
 
-type Restaurant = {
-  restaurantName: string;
-  city: string;
-  cuisines: [];
-  country: string;
-  deliveryTime: number;
-  imageUrl: undefined;
-  menus: Menu[];
-  _id: string;
-};
-
-type useRestaurantType = {
-  loading: boolean;
-  restaurant: null | Restaurant;
-  searchedrestaurant: Restaurant[];
-  filteredCuisines: string[];
-  singleRestaurant: any;
-  restaurantOrders: Orders[];
-  setfilteredCuisines: (data: string[]) => void;
-  createRestaurant: (formdata: FormData) => Promise<void>;
-  getrestaurant: () => Promise<void>;
-  updateRestaurant: (formData: FormData) => Promise<void>;
-  searchRestaurant: (
-    searchQuery: string,
-    searchText: string,
-    selectedCuisines: any
-  ) => Promise<void>;
-  getSingleRestaurant: (id: string) => Promise<void>;
-  getRestaurantOrders: () => Promise<void>;
-  updateOrderStatus: (orderId: string, status: string) => Promise<void>;
-};
 
 export const useRestaurantOrder = create<useRestaurantType>()(
   persist(
     (set,get) => ({
       restaurant: null,
       loading: false,
-      singleRestaurant: null,
+      singleRestaurant: {},
       searchedrestaurant: [],
       filteredCuisines: [],
       restaurantOrders: [],

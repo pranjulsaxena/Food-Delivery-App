@@ -1,8 +1,10 @@
 export type Menu = {
-  Name: string;
-  Description: string;
-  Price: number;
-  MenuImage: undefined;
+   name: string;
+  price: number;
+  imageUrl: string;
+  quantity: number;
+  _id: string; 
+  description?:string;
 };
 
 export type menuStoreType = {

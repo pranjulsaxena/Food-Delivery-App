@@ -12,7 +12,7 @@ import {
   restaurantSchema,
   type restaurantType,
 } from "@/schema/restaurantSchema";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles, Image } from "lucide-react";
 
 const Restaurant = () => {
   const {
@@ -54,7 +54,6 @@ const Restaurant = () => {
       setErrors(flattened.fieldErrors as Partial<restaurantType>);
       return;
     }
-    // api implementation starts here
     const formData = new FormData();
     formData.append("restaurantName", restaurantData.restaurantName);
     formData.append("city", restaurantData.city);
@@ -74,104 +73,117 @@ const Restaurant = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await getrestaurant();
-    };
-    fetchData();
+    getrestaurant();
   }, [getrestaurant]);
 
   useEffect(() => {
-      if (restaurant) {
-        setRestaurantData({
-          restaurantName: restaurant.restaurantName || "",
-          city: restaurant.city || "",
-          country: restaurant.country || "",
-          deliveryTime: restaurant.deliveryTime || 0,
-          cuisines: restaurant.cuisines
-            ? restaurant.cuisines.map((cuisines: string) => cuisines)
-            : [],
-          image: undefined,
-        });
-      
-    };
+    if (restaurant) {
+      setRestaurantData({
+        restaurantName: restaurant.restaurantName || "",
+        city: restaurant.city || "",
+        country: restaurant.country || "",
+        deliveryTime: restaurant.deliveryTime || 0,
+        cuisines: restaurant.cuisines
+          ? restaurant.cuisines.map((cuisines: string) => cuisines)
+          : [],
+        image: undefined,
+      });
+    }
   }, [restaurant]);
 
   return (
-    <div className="max-w-6xl mx-auto my-10 px-4">
-      <h1 className="text-2xl md:text-3xl font-bold md:font-extrabold">
-      {restaurant ?"Update Restaurant" :"Add Restaurant"}
-      </h1>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300 flex items-center justify-center px-4">
+      <div className="relative w-full max-w-3xl mx-auto bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl border border-white/20 dark:border-gray-700/50 rounded-2xl shadow-2xl p-8">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 bg-orange-100 dark:bg-orange-700/30 text-orange-600 dark:text-orange-400 px-4 py-2 rounded-full text-sm font-semibold mb-4 shadow-sm">
+            <Sparkles className="w-4 h-4" />
+            {restaurant ? "Update Restaurant" : "Add Restaurant"}
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 dark:from-orange-400 dark:to-amber-400 bg-clip-text text-transparent mb-2">
+            {restaurant ? "Update" : "Add"} Restaurant
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Fill all details to add/update your restaurant.
+          </p>
+        </div>
 
-      <form onSubmit={formHandler} encType="multipart/form-data" method="post">
-        <div className="grid md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <Label htmlFor="restaurantName">Restaurant Name</Label>
-            <Input
-              id="restaurantName"
-              name="restaurantName"
-              type="text"
-              placeholder="Enter restaurant name"
-              value={restaurantData.restaurantName}
-              onChange={changeHandler}
-            />
-            {errors.restaurantName && (
-              <span className="text-red-500 text-sm">
-                {errors.restaurantName}
-              </span>
-            )}
+        <form
+          onSubmit={formHandler}
+          encType="multipart/form-data"
+          method="post"
+          className="space-y-8"
+        >
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="restaurantName" className="font-bold text-gray-800 dark:text-gray-100">
+                Restaurant Name
+              </Label>
+              <Input
+                id="restaurantName"
+                name="restaurantName"
+                type="text"
+                placeholder="Enter restaurant name"
+                value={restaurantData.restaurantName}
+                onChange={changeHandler}
+                className="h-12 border-2 border-gray-200 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
+              {errors.restaurantName && (
+                <span className="text-red-500 text-sm">{errors.restaurantName}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city" className="font-bold text-gray-800 dark:text-gray-100">City</Label>
+              <Input
+                id="city"
+                name="city"
+                type="text"
+                placeholder="Enter city"
+                value={restaurantData.city}
+                onChange={changeHandler}
+                className="h-12 border-2 border-gray-200 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
+              {errors.city && (
+                <span className="text-red-500 text-sm">{errors.city}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="country" className="font-bold text-gray-800 dark:text-gray-100">Country</Label>
+              <Input
+                id="country"
+                name="country"
+                type="text"
+                placeholder="Enter country"
+                value={restaurantData.country}
+                onChange={changeHandler}
+                className="h-12 border-2 border-gray-200 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
+              {errors.country && (
+                <span className="text-red-500 text-sm">{errors.country}</span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="deliveryTime" className="font-bold text-gray-800 dark:text-gray-100">Estimated Delivery (min)</Label>
+              <Input
+                id="deliveryTime"
+                name="deliveryTime"
+                type="number"
+                placeholder="e.g. 30"
+                value={restaurantData.deliveryTime}
+                onChange={changeHandler}
+                min={0}
+                className="h-12 border-2 border-gray-200 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
+              {errors.deliveryTime && (
+                <span className="text-red-500 text-sm">{errors.deliveryTime}</span>
+              )}
+            </div>
           </div>
 
-          <div>
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              name="city"
-              type="text"
-              placeholder="Enter city"
-              value={restaurantData.city}
-              onChange={changeHandler}
-            />
-            {errors.city && (
-              <span className="text-red-500 text-sm">{errors.city}</span>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="country">Country</Label>
-            <Input
-              id="country"
-              name="country"
-              type="text"
-              placeholder="Enter country"
-              value={restaurantData.country}
-              onChange={changeHandler}
-            />
-            {errors.country && (
-              <span className="text-red-500 text-sm">{errors.country}</span>
-            )}
-          </div>
-
-          <div>
-            <Label htmlFor="deliveryTime">
-              Estimated Delivery Time (minutes)
-            </Label>
-            <Input
-              id="deliveryTime"
-              name="deliveryTime"
-              type="number"
-              placeholder="e.g. 30"
-              value={restaurantData.deliveryTime}
-              onChange={changeHandler}
-            />
-            {errors.deliveryTime && (
-              <span className="text-red-500 text-sm">
-                {errors.deliveryTime}
-              </span>
-            )}
-          </div>
-
-          <div className="md:col-span-2">
-            <Label htmlFor="cuisines">Cuisines (comma-separated)</Label>
+          <div className="space-y-2">
+            <Label htmlFor="cuisines" className="font-bold text-gray-800 dark:text-gray-100">Cuisines (comma-separated)</Label>
             <Input
               id="cuisines"
               name="cuisines"
@@ -181,41 +193,50 @@ const Restaurant = () => {
               onChange={(e) =>
                 setRestaurantData({
                   ...restaurantData,
-                  cuisines: e.target.value
-                    .split(",")
-                    .map((item) => item.trim()),
+                  cuisines: e.target.value.split(",").map((item) => item.trim()),
                 })
               }
+              className="h-12 border-2 border-gray-200 dark:border-gray-600 focus:border-orange-400 dark:focus:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             />
             {errors.cuisines && (
               <span className="text-red-500 text-sm">{errors.cuisines}</span>
             )}
           </div>
 
-          <div className="md:col-span-2">
-            <Label htmlFor="image">Restaurant Banner</Label>
+          <div className="space-y-2">
+            <Label htmlFor="image" className="font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+              <Image className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+              Restaurant Banner
+            </Label>
             <Input
               id="image"
               name="image"
               type="file"
               accept="image/*"
               onChange={changeHandler}
+              className="h-12 border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-orange-400 dark:hover:border-orange-500 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all duration-200"
             />
-            {errors.image && <span className="text-red-500 text-sm">{}</span>}
+            {errors.image && (
+              <span className="text-red-500 text-sm">"Image is required"</span>
+            )}
           </div>
-        </div>
 
-        <div className="my-10 flex justify-center">
-          <Button
-            type="submit"
-            className="w-full md:w-fit bg-[#D19254] hover:bg-[#d18c47]"
-            disabled={loading}
-          >
-            {loading && <Loader2 className="animate-spin mr-2 w-4 h-4" />}
-            {loading ? "Submitting..." : restaurant ? "Update" : "Add"}
-          </Button>
-        </div>
-      </form>
+          <div className="my-8 flex justify-center">
+            <Button
+              type="submit"
+              className="w-full md:w-1/2 bg-gradient-to-r from-orange-500 to-amber-500 dark:from-orange-600 dark:to-amber-600 hover:from-orange-600 hover:to-amber-600 dark:hover:from-orange-700 dark:hover:to-amber-700 text-white font-bold h-12 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center"
+              disabled={loading}
+            >
+              {loading && <Loader2 className="animate-spin mr-2 w-5 h-5" />}
+              {loading
+                ? "Submitting..."
+                : restaurant
+                ? "Update Restaurant"
+                : "Add Restaurant"}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

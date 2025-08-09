@@ -1,3 +1,4 @@
+import type { menuStoreType } from "@/Types/menuTypes";
 import axios from "axios";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -6,18 +7,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 axios.defaults.withCredentials = true;
 const API_ENDPOINT = "http://localhost:5000/api/v1/menu/";
 
-type menuStoreType = {
-  loading: boolean;
-  menu: Menu[];
-  createMenu: (formData: FormData) => Promise<void>;
-  editMenu: (menuId: string, formData: FormData) => Promise<void>;
-};
-type Menu = {
-  name: string;
-  description: string;
-  price: number;
-  image: undefined;
-};
+
 
 export const useMenuStore = create<menuStoreType>()(
   persist(
