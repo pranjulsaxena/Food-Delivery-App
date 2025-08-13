@@ -3,6 +3,7 @@ import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { useRestaurantOrder } from "../../store/useRestaurantStore";
 import { Sparkles } from "lucide-react"; // fun icon for heading
+import type { useRestaurantType } from "@/Types/restaurantTypes";
 
 function Filter() {
   const filterOptions = [
@@ -11,13 +12,13 @@ function Filter() {
     { id: "biryani", label: "Biryani" },
     { id: "momos", label: "Momos" },
   ];
-  const filteredCuisines = useRestaurantOrder((state) => state.filteredCuisines);
-  const setfilteredCuisines = useRestaurantOrder((state) => state.setfilteredCuisines);
+  const filteredCuisines = useRestaurantOrder((state:useRestaurantType) => state.filteredCuisines);
+  const setfilteredCuisines = useRestaurantOrder((state:useRestaurantType) => state.setfilteredCuisines);
 
   const appliedFilterHandler = (label: string) => {
     const isFiltered = filteredCuisines.includes(label);
     if (!isFiltered) setfilteredCuisines([...filteredCuisines, label]);
-    else setfilteredCuisines(filteredCuisines.filter((c) => c !== label));
+    else setfilteredCuisines(filteredCuisines.filter((c:string) => c !== label));
   };
 
   return (

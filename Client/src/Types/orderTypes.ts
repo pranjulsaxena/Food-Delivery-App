@@ -1,11 +1,7 @@
+import type { Menu } from "./menuTypes";
+
 export type CheckOutSessionRequest = {
-  cartItems: {
-    menuId: string;
-    name: string;
-    image: string;
-    price: string;
-    quantity: string;
-  }[];
+  cartItems: Menu[];
   deliveryDetails: {
     email: string;
     name: string;

@@ -10,6 +10,7 @@ import { Loader2, Plus, Camera, DollarSign, FileText, Tag, Edit3, Sparkles } fro
 import EditMenu from "@/components/EditMenu";
 import { useMenuStore } from "../../store/useMenuStore";
 import { useRestaurantOrder } from "../../store/useRestaurantStore";
+import type { Menu } from "@/Types/menuTypes";
 
 type MenuItem = {
   Name: string;
@@ -222,7 +223,7 @@ const AddMenu = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.map((item: any, index) => (
+            {data.map((item:Menu , index:number) => (
               <div
                 key={index}
                 className="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg dark:shadow-xl dark:shadow-black/20 hover:shadow-2xl dark:hover:shadow-black/30 transition-all duration-300 overflow-hidden hover:-translate-y-1 border dark:border-gray-700"
@@ -246,7 +247,7 @@ const AddMenu = () => {
                     onClick={() => {
                       setSelectedInput({
                         Name: item.name,
-                        Description: item.description,
+                        Description: item.description || "",
                         Price: item.price,
                         MenuImage: item.imageUrl,
                         id: item._id.toString(),

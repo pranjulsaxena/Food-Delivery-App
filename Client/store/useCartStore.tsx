@@ -9,12 +9,12 @@ export const useCartStore = create<cartState>()(
     (set) => ({
       cartItem: [],
       setCartItems: (newItem: Menu) => {
-        set((state) => {
+        set((state:cartState) => {
           const existingCartItem = state.cartItem.find(
-            (cartItem) => cartItem._id === newItem._id
+            (cartItem:Menu) => cartItem._id === newItem._id
           );
           if (existingCartItem) {
-            const updatedCartItem = state.cartItem.map((cartItem) =>
+            const updatedCartItem = state.cartItem.map((cartItem:Menu) =>
               cartItem._id === newItem._id
                 ? {
                     ...cartItem,
@@ -43,26 +43,26 @@ export const useCartStore = create<cartState>()(
         set({ cartItem: [] });
       },
       removeCartItems: (id: string) => {
-        set((state) => {
-          const updatedCart = state.cartItem.filter((item) => item._id !== id);
+        set((state:cartState) => {
+          const updatedCart = state.cartItem.filter((item:Menu) => item._id !== id);
           return { cartItem: updatedCart };
         });
       },
       increaseQuantity:(id:string)=>{
         set((state)=>{
-            const updatedCartItems = state.cartItem.map((item)=>item._id===id?{...item,quantity:item.quantity+1}:item);
+            const updatedCartItems = state.cartItem.map((item:Menu)=>item._id===id?{...item,quantity:item.quantity+1}:item);
             return {cartItem:updatedCartItems}
         })
       },
       decreaseQuantity:(id:string)=>{
-        set((state)=>{
-            const updatedCartItems = state.cartItem.filter((item)=>item._id ===id);
+        set((state:cartState)=>{
+            const updatedCartItems = state.cartItem.filter((item:Menu)=>item._id ===id);
             let quantity = updatedCartItems[0].quantity;
             let updatedCart;
             if(quantity===1){
-              updatedCart = state.cartItem.filter((item)=>item._id!=id);
+              updatedCart = state.cartItem.filter((item:Menu)=>item._id!=id);
             }else{
-              updatedCart = state.cartItem.map((item)=>item._id===id ?{...item,quantity:item.quantity-1}:item);
+              updatedCart = state.cartItem.map((item:Menu)=>item._id===id ?{...item,quantity:item.quantity-1}:item);
             }
              return {cartItem:updatedCart};
         })

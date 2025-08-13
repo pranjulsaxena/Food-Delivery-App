@@ -4,10 +4,11 @@ import { useRestaurantOrder } from "../../store/useRestaurantStore";
 import { useCartStore } from "../../store/useCartStore";
 import { ShoppingCart, Sparkles } from "lucide-react";
 import type { Menu } from "@/Types/menuTypes";
+import type { cartState } from "@/Types/cartTypes";
 
 function AvailableMenu() {
-  const cartItem = useCartStore((state) => state.cartItem);
-  const setCartItems = useCartStore((state) => state.setCartItems);
+  const cartItem = useCartStore((state:cartState) => state.cartItem);
+  const setCartItems = useCartStore((state:cartState) => state.setCartItems);
   const { singleRestaurant } = useRestaurantOrder();
 
   const handleAddtoCart = (menus:Menu) => {
@@ -21,7 +22,7 @@ function AvailableMenu() {
         Available Menus
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {singleRestaurant!.menus.map((menus, i) => (
+        {singleRestaurant!.menus.map((menus:Menu, i:number) => (
           <Card
             key={menus._id || i}
             className="group bg-white/90 dark:bg-gray-800/80 border border-orange-100 dark:border-gray-700 rounded-2xl shadow-xl hover:shadow-2xl transition-transform hover:-translate-y-2 overflow-hidden"
@@ -36,7 +37,7 @@ function AvailableMenu() {
               <div className="absolute top-2 right-2 bg-orange-100 dark:bg-orange-900/70 text-orange-600 dark:text-orange-400 px-3 py-1 rounded-full shadow font-bold text-sm tracking-wide">
                 ₹{menus.price}
               </div>
-              {cartItem.find(item => item._id === menus._id) && (
+              {cartItem.find((item:Menu) => item._id === menus._id) && (
                 <div className="absolute top-2 left-2 bg-green-500/80 text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
                   In Cart
                 </div>
@@ -54,10 +55,10 @@ function AvailableMenu() {
               <Button
                 className="w-full h-12 bg-gradient-to-r from-orange-500 to-amber-500 dark:from-orange-600 dark:to-amber-600 hover:from-orange-600 hover:to-amber-600 dark:hover:from-orange-700 dark:hover:to-amber-700 rounded-xl text-white font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2"
                 onClick={() => handleAddtoCart(menus)}
-                disabled={cartItem.some(item => item._id === menus._id)}
+                disabled={cartItem.some((item:Menu) => item._id === menus._id)}
               >
                 <ShoppingCart className="w-5 h-5" />
-                {cartItem.some(item => item._id === menus._id) ? "Added" : "Add to Cart"}
+                {cartItem.some((item:Menu) => item._id === menus._id) ? "Added" : "Add to Cart"}
               </Button>
             </CardFooter>
           </Card>

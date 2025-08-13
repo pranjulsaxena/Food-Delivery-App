@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import type { useRestaurantType } from "@/Types/restaurantTypes";
 
-const API_ENDPOINT = "http://localhost:5000/api/v1/restaurant";
+const API_ENDPOINT = "https://instafood-99o4.onrender.com/api/v1/restaurant";
 
 axios.defaults.withCredentials = true; // jwt token will be sent in request header for each request
 

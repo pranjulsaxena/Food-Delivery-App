@@ -8,7 +8,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import type { userState } from "../src/Types/userTypes";
 
-export const API_ENDPOINT = `http://localhost:5000/api/v1/user`;
+export const API_ENDPOINT = `https://instafood-99o4.onrender.com/api/v1/user`;
 
 
 export const useUserStore = create<userState>()(

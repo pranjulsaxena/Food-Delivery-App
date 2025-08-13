@@ -34,7 +34,7 @@ function RestaurantDetails() {
                   {singleRestaurant.restaurantName}
                 </h1>
                 <div className="flex gap-2 mt-2 flex-wrap">
-                  {singleRestaurant.cuisines.map((cuisine, idx) => (
+                  {singleRestaurant.cuisines.map((cuisine:string, idx:number) => (
                     <Badge key={idx} className="bg-white/80 dark:bg-gray-900/70 text-orange-700 dark:text-amber-300 px-3 py-1 font-medium rounded-md shadow">
                       {cuisine}
                     </Badge>

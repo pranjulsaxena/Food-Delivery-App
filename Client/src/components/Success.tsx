@@ -5,6 +5,8 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { IndianRupee, PackageCheck, Truck, Clock, ClipboardX, ShoppingBag } from "lucide-react";
+import {type Orders } from "@/Types/orderTypes";
+import type { Menu } from "@/Types/menuTypes";
 
 const StatusInfo = {
   DELIVERED: { variant: "secondary", icon: <PackageCheck className="w-4 h-4 mr-2" />, text: "Delivered" },
@@ -12,12 +14,12 @@ const StatusInfo = {
   PLACED: { variant: "default", icon: <Clock className="w-4 h-4 mr-2" />, text: "Placed" },
 } as const;
 
-type StatusKey = keyof typeof StatusInfo;
+type StatusKey = keyof typeof StatusInfo; 
 
-const OrderItem = ({ name, price, image, quantity }: { name: string; price: string; image: string; quantity: string }) => (
+const OrderItem = ({ name, price,  imageUrl, quantity }: { name: string; price: number; imageUrl: string; quantity: number }) => (
   <div className="flex justify-between items-center py-3 border-b last:border-b-0">
     <div className="flex items-center gap-3">
-      <img src={image} className="size-14 rounded-lg object-cover" alt={name} />
+      <img src={imageUrl} className="size-14 rounded-lg object-cover" alt={name} />
       <div>
         <p className="font-medium text-foreground">{name}</p>
         <p className="text-sm text-muted-foreground">Qty: {quantity}</p>
@@ -25,7 +27,7 @@ const OrderItem = ({ name, price, image, quantity }: { name: string; price: stri
     </div>
     <div className="flex items-center gap-1 font-semibold">
       <IndianRupee className="w-4 h-4" />
-      {Number(price) * Number(quantity)}
+      {(price) * (quantity)}
     </div>
   </div>
 );
@@ -69,7 +71,7 @@ const Success = () => {
           <p className="text-muted-foreground">Track your recent purchases</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {orders.map((order) => {
+          {orders.map((order:Orders) => {
             const status = order.status.toUpperCase() as StatusKey;
             const statusInfo = StatusInfo[status] ?? StatusInfo.PLACED;
             return (
@@ -85,8 +87,8 @@ const Success = () => {
                 </CardHeader>
                 <CardContent className="py-0">
                   <div className="space-y-0">
-                    {order.cartItems?.map((cartItem) => (
-                      <OrderItem key={cartItem.menuId} {...cartItem} />
+                    {order.cartItems?.map((cartItem:Menu) => (
+                      <OrderItem key={cartItem._id} {...cartItem} />
                     ))}
                   </div>
                 </CardContent>

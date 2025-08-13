@@ -22,6 +22,7 @@ import { useCartStore } from "../../store/useCartStore";
 import { useRestaurantOrder } from "../../store/useRestaurantStore";
 import { useOrderStore } from "../../store/useOrderStore";
 import { Loader2, ShoppingBag, Sparkles } from "lucide-react";
+import type { Menu } from "@/Types/menuTypes";
 
 const CheckOutPage = ({
   open,
@@ -52,12 +53,12 @@ const CheckOutPage = ({
     e.preventDefault();
 
     const checkoutPayload: CheckOutSessionRequest = {
-      cartItems: cartItem.map((item) => ({
-        menuId: item._id,
+      cartItems: cartItem.map((item:Menu) => ({
+        _id: item._id,
         name: item.name,
-        price: item.price.toString(),
-        image: item.imageUrl,
-        quantity: item.quantity.toString(),
+        price: item.price,
+        imageUrl: item.imageUrl,
+        quantity: item.quantity,
       })),
       deliveryDetails: {
         email: data.Email,

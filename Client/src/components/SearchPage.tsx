@@ -9,6 +9,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import SearchPageSkeleton from "./SearchPageSkeleton";
 import { useRestaurantOrder } from "../../store/useRestaurantStore";
+import type { Restaurant } from "@/Types/restaurantTypes";
 
 function SearchPage() {
   const Params = useParams();
@@ -55,13 +56,13 @@ function SearchPage() {
               </h2>
               {filteredCuisines.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {filteredCuisines.map((selectedFilter, idx) => (
+                  {filteredCuisines.map((selectedFilter:string, idx:number) => (
                     <Badge
                       key={idx}
                       className="bg-white/80 dark:bg-gray-800 border dark:border-gray-700 text-orange-600 dark:text-orange-400 flex items-center gap-1 rounded-lg font-medium transition cursor-pointer shadow"
                       variant="outline"
                       onClick={() => setfilteredCuisines(
-                        filteredCuisines.filter((c) => c !== selectedFilter)
+                        filteredCuisines.filter((c:string) => c !== selectedFilter)
                       )}
                     >
                       <span>{selectedFilter}</span>
@@ -88,7 +89,7 @@ function SearchPage() {
             ) : searchedrestaurant.length === 0 ? (
               <NoResultFound searchTerm={Params.text!} />
             ) : (
-              searchedrestaurant.map((restaurant, index) => (
+              searchedrestaurant.map((restaurant:Restaurant, index:number) => (
                 <Card
                   key={restaurant._id || index}
                   className="overflow-hidden rounded-2xl bg-white/90 dark:bg-gray-800/90 border border-gray-100 dark:border-gray-700 shadow-xl hover:shadow-2xl transition-transform hover:-translate-y-2"
@@ -119,7 +120,7 @@ function SearchPage() {
                       Country: <span className="font-semibold mx-1">{restaurant.country}</span>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {restaurant.cuisines.map((cuisine, idx) => (
+                      {restaurant.cuisines.map((cuisine:string, idx:number) => (
                         <Badge
                           key={idx}
                           className="bg-orange-50 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-3 py-1 rounded-full font-medium text-xs"

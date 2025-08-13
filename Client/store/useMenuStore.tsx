@@ -5,7 +5,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 axios.defaults.withCredentials = true;
-const API_ENDPOINT = "http://localhost:5000/api/v1/menu/";
+const API_ENDPOINT = "https://instafood-99o4.onrender.com/api/v1/menu/";
 
 
 
@@ -25,7 +25,7 @@ export const useMenuStore = create<menuStoreType>()(
           });
           if (response.data.success) {
             // set({loading:false,menu:response.data.menu});\
-            set((state) => ({
+            set((state:menuStoreType) => ({
               loading: false,
               menu: [...state.menu, response.data.data],
             }));
@@ -50,7 +50,7 @@ export const useMenuStore = create<menuStoreType>()(
             }
           );
           if (response.data.success) {
-            set((state) => ({
+            set((state:menuStoreType) => ({
               loading: false,
               menu: [...state.menu, response.data.data],
             }));

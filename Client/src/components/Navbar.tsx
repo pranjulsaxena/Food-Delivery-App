@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import {
-  Menu,
+  Menu as MenuIcon,
   Moon,
   ShoppingCart,
   Sun,
@@ -43,6 +43,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { useUserStore } from "../../store/useUserStore";
 import { useCartStore } from "../../store/useCartStore";
 import { useThemeStore } from "../../store/useThemeStore";
+import type { Menu } from "@/Types/menuTypes";
 
 function Navbar() {
   const { loading, user, logOut } = useUserStore();
@@ -51,7 +52,7 @@ function Navbar() {
   const { cartItem } = useCartStore();
 
   const totalCartItems = cartItem.reduce(
-    (total, item) => total + item.quantity,
+    (total:number, item:Menu) => (total + item.quantity),
     0
   );
 
@@ -240,7 +241,7 @@ const MobileMenu = () => {
           size="icon"
           className="border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-600"
         >
-          <Menu className="w-5 h-5" />
+          <MenuIcon className="w-5 h-5" />
         </Button>
       </SheetTrigger>
       <SheetContent className="w-80 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-700">

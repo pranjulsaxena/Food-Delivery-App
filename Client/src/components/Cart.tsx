@@ -9,8 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar } from "./ui/avatar";
-import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar,AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Minus,
   Plus,
@@ -37,11 +36,11 @@ const Cart = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const totalAmount = cartItem.reduce(
-    (sum, current) => sum + current.price * current.quantity,
+    (sum:number, current:Menu) => sum + current.price * current.quantity,
     0
   );
   const totalItems = cartItem.reduce(
-    (sum, current) => sum + current.quantity,
+    (sum:number, current:Menu) => sum + current.quantity,
     0
   );
 
@@ -133,7 +132,7 @@ const Cart = () => {
                 </TableHeader>
 
                 <TableBody>
-                  {cartItem.map((item:Menu, index) => (
+                  {cartItem.map((item:Menu, index:number) => (
                     <TableRow
                       className="hover:bg-orange-50 dark:hover:bg-gray-700/30 transition-all duration-200 border-b dark:border-gray-700"
                       key={index}
