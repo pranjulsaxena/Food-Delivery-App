@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
+import  { useState, type ChangeEvent, type FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Loader2, LockKeyhole, Mail, PhoneIcon, User2Icon, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";

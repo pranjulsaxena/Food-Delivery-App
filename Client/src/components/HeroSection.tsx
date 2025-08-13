@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent } from "react";
+import  { useState} from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search, MapPin, Clock, Star, Sparkles } from "lucide-react";

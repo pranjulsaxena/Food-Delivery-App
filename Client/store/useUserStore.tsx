@@ -6,7 +6,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import axios from "axios";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 import type { userState } from "../src/Types/userTypes";
 
 export const API_ENDPOINT = `http://localhost:5000/api/v1/user`;
@@ -37,7 +36,6 @@ export const useUserStore = create<userState>()(
             }
           );
           if (response.data.success) {
-            console.log(response.data);
             toast.success(`${response.data.message}`);
             set({
               loading: false,
@@ -58,7 +56,6 @@ export const useUserStore = create<userState>()(
             withCredentials: true,
           });
           if (response.data.success) {
-            console.log(response.data.user);
             toast.success(response.data.message);
             set({
               loading: false,
@@ -80,7 +77,6 @@ export const useUserStore = create<userState>()(
             { headers: { "Content-Type": "application/json" } }
           );
           if (response.data.success) {
-            console.log(response.data.user);
             toast.success(response.data.message);
             set({ loading: false, user: response.data.user });
           }
@@ -91,13 +87,11 @@ export const useUserStore = create<userState>()(
       },
       checkAuth: async () => {
         try {
-          console.log("Inside checkAuth of zustand store.");
           const response = await axios.get(`${API_ENDPOINT}/check-auth`, {
             withCredentials: true,
           });
 
           if (response.data.success) {
-            console.log("all is well");
             set({
               isCheckingAuth: false,
               isAuthenticated: true,
@@ -157,9 +151,7 @@ export const useUserStore = create<userState>()(
       },
       updatedetails: async (input: any) => {
         try {
-          console.log(" f 1");
           set({ loading: true });
-          console.log("f 2");
           const response = await axios.put(
             `${API_ENDPOINT}/profile/update`,
             input,
@@ -170,7 +162,6 @@ export const useUserStore = create<userState>()(
               },
             }
           );
-          console.log("F 3");
           if (response.data.success) {
             toast.success(response.data.message);
             set({ loading: false, user: response.data.user });

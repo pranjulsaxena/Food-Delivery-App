@@ -1,4 +1,4 @@
-import React, { useState, useRef, type ChangeEvent, type FormEvent, type KeyboardEvent } from "react";
+import  { useState, useRef, type ChangeEvent, type FormEvent, type KeyboardEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -34,7 +34,6 @@ function VerifyEmail() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300 flex justify-center items-center px-4">
-      {/* Background glow blobs */}
       <div className="absolute inset-0 pointer-events-none select-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-orange-200/30 dark:bg-orange-900/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-200/30 dark:bg-amber-900/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -62,7 +61,7 @@ function VerifyEmail() {
               key={index}
               type="text"
               maxLength={1}
-              ref={(el) => (inputRef.current[index] = el)}
+              ref={(el) => {(inputRef.current[index] = el)}}
               value={value}
               onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(e.target.value.toUpperCase(), index)}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleBackspace(e.key, index)}

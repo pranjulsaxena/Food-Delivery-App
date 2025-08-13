@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useOrderStore } from "../../store/useOrderStore";
 import { Button } from "./ui/button";
@@ -7,19 +7,17 @@ import { Badge } from "./ui/badge";
 import { IndianRupee, PackageCheck, Truck, Clock, ClipboardX, ShoppingBag } from "lucide-react";
 
 const StatusInfo = {
-  DELIVERED: { variant: "success", icon: <PackageCheck className="w-4 h-4 mr-2" />, text: "Delivered" },
-  "IN PROGRESS": { variant: "warning", icon: <Truck className="w-4 h-4 mr-2" />, text: "In Progress" },
+  DELIVERED: { variant: "secondary", icon: <PackageCheck className="w-4 h-4 mr-2" />, text: "Delivered" },
+  "IN PROGRESS": { variant: "outline", icon: <Truck className="w-4 h-4 mr-2" />, text: "In Progress" },
   PLACED: { variant: "default", icon: <Clock className="w-4 h-4 mr-2" />, text: "Placed" },
-};
+} as const;
 
-const OrderItem = ({ name, price, image, quantity }) => (
+type StatusKey = keyof typeof StatusInfo;
+
+const OrderItem = ({ name, price, image, quantity }: { name: string; price: string; image: string; quantity: string }) => (
   <div className="flex justify-between items-center py-3 border-b last:border-b-0">
     <div className="flex items-center gap-3">
-      <img 
-        src={image} 
-        className="size-14 rounded-lg object-cover" 
-        alt={name} 
-      />
+      <img src={image} className="size-14 rounded-lg object-cover" alt={name} />
       <div>
         <p className="font-medium text-foreground">{name}</p>
         <p className="text-sm text-muted-foreground">Qty: {quantity}</p>
@@ -27,7 +25,7 @@ const OrderItem = ({ name, price, image, quantity }) => (
     </div>
     <div className="flex items-center gap-1 font-semibold">
       <IndianRupee className="w-4 h-4" />
-      {price * quantity}
+      {Number(price) * Number(quantity)}
     </div>
   </div>
 );
@@ -35,8 +33,8 @@ const OrderItem = ({ name, price, image, quantity }) => (
 const Success = () => {
   const { orders, getOrderDetails } = useOrderStore();
 
-  useEffect(() => { 
-    getOrderDetails(); 
+  useEffect(() => {
+    getOrderDetails();
   }, [getOrderDetails]);
 
   if (orders.length === 0) {
@@ -66,43 +64,32 @@ const Success = () => {
   return (
     <div className="min-h-screen bg-muted/30 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Simple Header */}
         <div className="text-center mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Your Orders</h1>
           <p className="text-muted-foreground">Track your recent purchases</p>
         </div>
-        
-        {/* Orders Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {orders.map((order) => {
-            const status = order.status.toUpperCase();
-            const statusInfo = StatusInfo[status] || StatusInfo.PLACED;
-            
+            const status = order.status.toUpperCase() as StatusKey;
+            const statusInfo = StatusInfo[status] ?? StatusInfo.PLACED;
             return (
               <Card key={order._id} className="h-full hover:shadow-md transition-shadow">
                 <CardHeader className="pb-4">
                   <div className="flex justify-between items-start">
                     <div>
                       <CardTitle className="text-lg">Order #{order._id.slice(-6)}</CardTitle>
-                      <CardDescription>
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </CardDescription>
+                      <CardDescription>{new Date(order.createdAt).toLocaleDateString()}</CardDescription>
                     </div>
-                    <Badge variant={statusInfo.variant}>
-                      {statusInfo.icon}
-                      {statusInfo.text}
-                    </Badge>
+                    <Badge variant={statusInfo.variant}>{statusInfo.icon}{statusInfo.text}</Badge>
                   </div>
                 </CardHeader>
-
                 <CardContent className="py-0">
                   <div className="space-y-0">
                     {order.cartItems?.map((cartItem) => (
-                      <OrderItem key={cartItem.id} {...cartItem} />
+                      <OrderItem key={cartItem.menuId} {...cartItem} />
                     ))}
                   </div>
                 </CardContent>
-                
                 <CardFooter className="flex flex-col gap-4 pt-4">
                   <div className="flex justify-between items-center w-full text-lg font-bold">
                     <span>Total</span>

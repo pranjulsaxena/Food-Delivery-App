@@ -1,24 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import {
-  Earth,
   Globe,
-  Globe2Icon,
   Mail,
   MapPin,
   Phone,
-  Plus,
   Camera,
   User,
   Save,
   Sparkles,
   Edit3,
 } from "lucide-react";
-import React, {
+import {
   useEffect,
   useRef,
   useState,
   type ChangeEvent,
-  type EventHandler,
   type FormEvent,
 } from "react";
 import unknown from "@/assets/unknown.jpg";

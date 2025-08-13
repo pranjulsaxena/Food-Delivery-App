@@ -1,4 +1,4 @@
-import React, { useState, type ButtonHTMLAttributes } from "react";
+import  { useState} from "react";
 import { Button } from "./ui/button";
 import {
   Table,
@@ -21,8 +21,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 import CheckOutPage from "./CheckOutPage";
-import { useCartStore, type cartItemType } from "../../store/useCartStore";
+import { useCartStore,  } from "../../store/useCartStore";
 import { Link } from "react-router-dom";
+import type { Menu } from "@/Types/menuTypes";
 
 const Cart = () => {
   const {
@@ -132,7 +133,7 @@ const Cart = () => {
                 </TableHeader>
 
                 <TableBody>
-                  {cartItem.map((item:cartItemType, index) => (
+                  {cartItem.map((item:Menu, index) => (
                     <TableRow
                       className="hover:bg-orange-50 dark:hover:bg-gray-700/30 transition-all duration-200 border-b dark:border-gray-700"
                       key={index}

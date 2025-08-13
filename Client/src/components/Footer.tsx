@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { Copyright, Mail, MapPin, Phone, Heart, Sparkles, Send, ChefHat } from "lucide-react";
 import { FaWhatsapp, FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Separator } from "@radix-ui/react-separator";
 
 function Footer() {
   const [email, setEmail] = useState("");

@@ -1,4 +1,4 @@
-import React, { useState, type ChangeEvent, type FormEvent } from "react";
+import  { useState, type ChangeEvent, type FormEvent } from "react";
 import { Input } from "@/components/ui/input";
 import { Loader2, LockKeyhole, Mail, Eye, EyeOff, ChefHat, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,14 +23,12 @@ function Login() {
 
   const formSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(input);
     const result = userLoginSchema.safeParse(input);
     if (!result.success) {
       const flattened = result.error.flatten();
       setErrors(flattened.fieldErrors as Partial<LoginInputState>);
       return;
     }
-    console.log("implementing login");
     await login(input);
   };
 

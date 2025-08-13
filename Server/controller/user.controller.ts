@@ -43,7 +43,7 @@ export const signup = async (req: Request, res: Response) => {
     await sendVerificationEmail(email, verificationToken);
 
     const userWithoutPassword = await User.findOne({ email }).select(
-      "-password"
+      "-password -verificationToken -verificationExpiredAt -resetPasswordToken -resetPasswordTokenExpiredAt"
     );
     res.status(201).json({
       success: true,
@@ -52,7 +52,7 @@ export const signup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ message: "Internal Sever Error" });
+    res.status(500).json({ message: "Internal Sever Error" });
   }
 };
 
@@ -78,7 +78,7 @@ export const login = async (req: Request, res: Response) => {
     user.lastlogin = new Date();
     await user.save();
 
-    const userWithoutPassword = await User.findOne({ email });
+    const userWithoutPassword = await User.findOne({ email }).select("-password");
     res.status(200).json({
       success: true,
       message: `Welcome back ${user.fullName}`,

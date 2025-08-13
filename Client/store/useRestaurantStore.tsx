@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import axios from "axios";
 import { toast } from "sonner";
-import type { Orders } from "@/Types/orderTypes";
 import type { useRestaurantType } from "@/Types/restaurantTypes";
 
 const API_ENDPOINT = "http://localhost:5000/api/v1/restaurant";
@@ -16,7 +15,7 @@ export const useRestaurantOrder = create<useRestaurantType>()(
     (set,get) => ({
       restaurant: null,
       loading: false,
-      singleRestaurant: {},
+      singleRestaurant: null,
       searchedrestaurant: [],
       filteredCuisines: [],
       restaurantOrders: [],
@@ -79,7 +78,6 @@ export const useRestaurantOrder = create<useRestaurantType>()(
           const response = await axios.get(
             `${API_ENDPOINT}/search/${searchText}?${params.toString()}`
           );
-          console.log(selectedCuisines);
 
           if (response.data.success) {
             set({ loading: false, searchedrestaurant: response.data.data });

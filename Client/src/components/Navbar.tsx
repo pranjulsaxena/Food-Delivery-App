@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import {
   Menubar,
@@ -25,7 +24,6 @@ import {
   UtensilsCrossed,
   PackageCheck,
   ChefHat,
-  Bell,
   Settings,
   Sparkles,
 } from "lucide-react";

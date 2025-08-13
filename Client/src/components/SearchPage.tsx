@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Filter from "./Filter";
 import { Badge } from "./ui/badge";
-import { Globe, MapPin, X, Sparkles, Search as SearchIcon } from "lucide-react";
+import { Globe, MapPin, X,  Search as SearchIcon } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import SearchPageSkeleton from "./SearchPageSkeleton";

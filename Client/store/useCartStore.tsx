@@ -1,5 +1,3 @@
-import { CardTitle } from "@/components/ui/card";
-import type { MenuType } from "@/schema/menuSchema";
 import type { cartState } from "../src/Types/cartTypes";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";

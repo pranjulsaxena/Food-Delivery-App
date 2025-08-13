@@ -1,4 +1,4 @@
-import { file, z } from "zod/v4"; 
+import {  z } from "zod/v4"; 
 
 export const restaurantSchema = z.object({
     restaurantName: z.string().min(1,"required can't be empty"),

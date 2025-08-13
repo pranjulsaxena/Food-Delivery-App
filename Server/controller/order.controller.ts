@@ -7,7 +7,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const endpointSecret = process.env.WEBHOOK_ENDPOINT_SECRET!;
 
 type checkOutItems = {
-  carItems: menuItems[];
+  cartItems: menuItems[];
   deliveryDetails: {
     email: string;
     name: string;
@@ -55,9 +55,9 @@ export const createCheckOutSession = async (req: Request, res: Response) => {
       user: req.userId,
       restaurant: Restaurant._id,
       deliveryDetails: checkoutSessionRequest.deliveryDetails,
-      cartItems: checkoutSessionRequest.carItems,
+      cartItems: checkoutSessionRequest.cartItems,
       status: "pending",
-      totalAmount: checkoutSessionRequest.carItems.reduce(
+      totalAmount: checkoutSessionRequest.cartItems.reduce(
         (amount, item) => amount + item.price * item.quantity,
         0
       ),
@@ -91,7 +91,6 @@ export const createCheckOutSession = async (req: Request, res: Response) => {
     res.status(200).json({ session });
     return;
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -129,7 +128,7 @@ export const stripeWebhook = async (req: express.Request, res: express.Response)
       }
 
       await order.save();
-      console.log("✅ Order updated after payment confirmation");
+      // Order updated after payment confirmation
     } catch (error) {
       console.error("Error handling checkout session:", error);
       res.status(500).json({ message: "Internal Server Error" });
@@ -148,7 +147,7 @@ export const createLineItems = (
   menuItems: any
 ) => {
   // create line items
-  const lineItems = checkoutSessionRequest.carItems.map((carItems) => {
+  const lineItems = checkoutSessionRequest.cartItems.map((carItems) => {
     const menuItem = menuItems.find(
       (item: any) => item._id.toString() === carItems.menuId
     );

@@ -13,7 +13,6 @@ export const isAuthenticated=(req:Request,res:Response,next:NextFunction)=>{
     
     try{
         const token = req.cookies.token;
-        console.log(req.cookies);
         if (!token) {
        res.status(401).json({ message: "No token", success: false });
        return;
@@ -25,7 +24,6 @@ export const isAuthenticated=(req:Request,res:Response,next:NextFunction)=>{
              res.status(401).json({ message: "Invalid token", success: false })
              return
         }
-        console.log(decoded_info.userId);
         req.userId = decoded_info.userId;
 
         next();

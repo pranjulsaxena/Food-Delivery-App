@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec tsx index.ts"
+    "dev": "nodemon --exec tsx Server/index.ts",
+    "stripe":"stripe listen --forward-to localhost:5000/api/v1/order/webhook",
+    "build":"npm install && npm install --prefix Client && npm run build --prefix Client",
+    "start":"nodemon --exec tsx Server/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +26,10 @@
     "mailtrap": "^4.1.0",
     "mongoose": "^8.16.0",
     "multer": "^2.0.1",
-    "stripe": "^18.2.1"
+    "stripe": "^18.2.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-model-validator": "^3.0.21",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -36,9 +42,6 @@
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.10",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-model-validator": "^3.0.21",
-    "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

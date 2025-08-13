@@ -169,7 +169,6 @@ export const searchRestaurant = async (req: Request, res: Response) => {
     if (selectedCuisines.length > 0) {
       query.cuisines = { $in: selectedCuisines };
     }
-    console.log(query);
     const Restaurants = await restaurant.find(query);
     res.status(200).json({ success: true, data: Restaurants });
   } catch (error) {
@@ -177,7 +176,7 @@ export const searchRestaurant = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+ 
 export const getSingleRestaurant = async (req: Request, res: Response) => {
   const restaurantId = req.params.id;
   try {
