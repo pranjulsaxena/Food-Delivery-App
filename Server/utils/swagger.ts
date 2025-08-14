@@ -1,17 +1,17 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import { Router } from "express";
 import swaggerUi from "swagger-ui-express";
-import path from "path";
+
 
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "Food Delivery API",
-      version: "1.0.0",
+      version: "1.0.1",
       description: "API documentation for the Food Delivery application.",
     },
-    servers: [{ url: `http://localhost:${process.env.PORT || 8000}` }],
+    servers: [{ url: `http://localhost:${process.env.PORT}` },{url:"https://instafood-99o4.onrender.com"}],
     components: {
       securitySchemes: {
         cookieAuth: {
@@ -271,11 +271,10 @@ const options = {
           required: ["name", "description", "price", "imageUrl"],
         },
 
-        // Add more schemas as needed
       },
     },
   },
-  apis: [path.join(process.cwd(), "routes", "*.ts")],
+  apis: ["./Server/routes/*.ts", ],
 };
 
 const swaggerSpec = swaggerJsdoc(options);

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec tsx Server/index.ts",
-    "stripe":"stripe listen --forward-to localhost:5000/api/v1/order/webhook",
+    "stripe":"stripe listen --forward-to instafood-99o4.onrender.comapi/v1/order/webhook",
     "build":"npm install && npm install --prefix Client && npm run build --prefix Client",
     "start":"nodemon --exec tsx Server/index.ts"
   },
